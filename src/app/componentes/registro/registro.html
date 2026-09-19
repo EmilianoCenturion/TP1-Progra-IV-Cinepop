@@ -1,0 +1,62 @@
+<div class="logo-wrap">
+    <img src="/logo-cinepop.png" alt="Cinepop" class="logo-img-form">
+</div>
+
+
+<form class="form" [formGroup]="formRegistro" (ngSubmit)="resultadoRegistro()">
+    <h2>Registrate</h2>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email">
+    </div>
+
+    <div>
+        <label for="contraseña">Contraseña</label>
+        <input type="password" id="contraseña" formControlName="contraseña">
+    </div>
+
+    <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" formControlName="nombre">
+    </div>
+
+    <div>
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" formControlName="apellido">
+    </div>
+
+    <div>
+        <label for="fechaNacimiento">Fecha de nacimiento</label>
+        <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento">
+    </div>
+
+    <div>
+        <label for="tipoSangre">Tipo de sangre</label>
+        <select id="tipoSangre" formControlName="tipoSangre">
+            <option value="" disabled selected>Seleccioná...</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="colorOjos">Color de ojos</label>
+        <input type="text" id="colorOjos" formControlName="colorOjos">
+    </div>
+    
+    <div>
+        <label for="diasVacaciones">Días de vacaciones</label>
+        <input type="number" id="diasVacaciones" formControlName="diasVacaciones" min="0">
+    </div>
+    
+    <button [disabled]="formRegistro.invalid" type="submit">Registrarme</button>
+    
+    <a class="link-secundario" routerLink="/login">¿Ya tenés cuenta? Iniciá sesión</a>
+</form>

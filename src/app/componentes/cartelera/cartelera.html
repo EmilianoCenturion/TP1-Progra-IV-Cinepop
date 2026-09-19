@@ -1,0 +1,45 @@
+<div class="cartelera">
+
+    <div class="barra-filtros">
+        <span class="filtros-label">Filtrar por género</span>
+        <div class="filtro-generos">
+            <button
+                type="button"
+                class="chip-genero"
+                *ngFor="let genero of generos()"
+                [class.activo]="generosSeleccionados().includes(genero.id)"
+                (click)="seleccionaGenero(genero.id)"
+            >
+                {{ genero.nombre }}
+            </button>
+        </div>
+    </div>
+
+    <section>
+        <h2>Todas las peliculas</h2>
+
+        <ul class="catalogo">
+            <li class="card-pelicula" *ngFor="let pelicula of peliculasFiltradas()">
+                <div class="card-cuerpo">
+                    <div class="poster-wrap">
+                        <img [src]="pelicula.imagen_url" [alt]="pelicula.nombre">
+                    </div>
+
+                    <div class="card-info">
+                        <h3>{{ pelicula.nombre }}</h3>
+
+                        <p class="card-linea">
+                            <span>{{ pelicula.formato }}</span>
+                            <span *ngIf="pelicula.clasificacion_edad > 0">+{{ pelicula.clasificacion_edad }}</span>
+                            <span *ngFor="let pg of pelicula.peliculas_generos">{{ pg.generos.nombre }}</span>
+                        </p>
+
+                        <p class="card-promedio" *ngIf="pelicula.promedio">
+                            {{ pelicula.promedio }} de 5 en reseñas de espectadores
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

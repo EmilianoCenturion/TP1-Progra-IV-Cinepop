@@ -1,0 +1,52 @@
+<div class="home">
+    <section>
+        <h2>Top 3 mas vendidas</h2>
+
+        <ul class="catalogo">
+            <li class="card-pelicula" *ngFor="let pelicula of top3()">
+                <div class="card-cuerpo">
+                    <div class="poster-wrap">
+                        <img [src]="pelicula.imagen_url" [alt]="pelicula.nombre">
+                    </div>
+
+                    <div class="card-info">
+                        <h3>{{ pelicula.nombre }}</h3>
+
+                        <p class="card-linea">
+                            <span>{{ pelicula.formato }}</span>
+                            <span *ngIf="pelicula.clasificacion_edad > 0">+{{ pelicula.clasificacion_edad }}</span>
+                            <span *ngFor="let pg of pelicula.peliculas_generos">{{ pg.generos.nombre }}</span>
+                        </p>
+
+                        <p class="card-promedio" *ngIf="pelicula.promedio">
+                            {{ pelicula.promedio }} de 5 en reseñas de espectadores
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Reseñas recientes</h2>
+
+        <ul class="lista-resenas">
+            <li class="resena" *ngFor="let resena of resenas()">
+                <img class="resena-poster" [src]="resena.peliculas.imagen_url" [alt]="resena.peliculas.nombre">
+
+                <div class="resena-cuerpo">
+                    <h3>{{ resena.peliculas.nombre }}</h3>
+
+                    <div class="resena-meta">
+                        <span class="resena-usuario">{{ resena.usuarios.nombre }}</span>
+                        <span class="resena-estrellas">
+                        <span *ngFor="let n of estrellas" [class.llena]="n <= resena.calificacion">★</span>
+                        </span>
+                    </div>
+
+                    <p class="resena-comentario">{{ resena.comentario }}</p>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

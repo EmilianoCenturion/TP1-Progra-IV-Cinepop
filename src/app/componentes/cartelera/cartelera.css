@@ -1,0 +1,192 @@
+.cartelera h2 {
+    font-size: 50px;
+    text-align: center;
+    margin: 0;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--color-superficie);
+}
+
+.buscador {
+    width: 100%;
+    max-width: 420px;
+    margin-bottom: 16px;
+    padding: 6px 4px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--color-texto-secundario);
+    color: var(--color-texto);
+    font-family: var(--fuente-cuerpo);
+    font-size: 14px;
+}
+
+.buscador::placeholder {
+    color: var(--color-texto-secundario);
+}
+
+.buscador:focus {
+    outline: none;
+    border-bottom-color: var(--color-acento-dorado);
+}
+
+.filtro-generos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.chip-genero {
+    font-family: var(--fuente-cuerpo);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--color-texto-secundario);
+    background: transparent;
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chip-genero:hover {
+    border-color: var(--color-texto);
+    color: var(--color-texto);
+}
+
+.chip-genero.activo {
+    border-color: var(--color-acento-rojo);
+    background-color: var(--color-acento-rojo);
+    color: var(--color-texto);
+}
+
+.catalogo {
+    list-style: none;
+    justify-content: center;
+    margin: 0;
+    padding: 8px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 280px));
+    gap: 20px 20px;
+}
+
+.card-pelicula {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-card);
+    opacity: 0;
+    animation: aparecer 0.5s ease forwards;
+    transition: background-color 0.2s ease;
+}
+
+.card-pelicula:hover {
+    background-color: #4A4658;
+}
+
+.card-pelicula:nth-child(2) { animation-delay: 0.05s; }
+.card-pelicula:nth-child(3) { animation-delay: 0.1s; }
+.card-pelicula:nth-child(4) { animation-delay: 0.15s; }
+.card-pelicula:nth-child(5) { animation-delay: 0.2s; }
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-cuerpo {
+    border-radius: var(--radio-card);
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.card-cuerpo img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.card-pelicula:hover .card-cuerpo {
+    border-color: var(--color-acento-dorado);
+}
+
+.poster-wrap {
+    position: relative;
+}
+
+.poster-wrap img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.card-info {
+    margin-top: -28px;
+    margin-left: 0;
+    margin-right: 0;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-elemento);
+    padding: 12px 14px 14px;
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.2s ease;
+    min-height: 100px;
+}
+
+.card-pelicula:hover .card-info {
+    background-color: #4A4658;
+}
+
+.card-info h3 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    line-height: 1.15;
+    color: var(--color-texto);
+}
+
+.card-linea {
+    margin: 0 0 6px;
+    font-family: var(--fuente-cuerpo);
+    font-size: 12px;
+    color: var(--color-texto-secundario);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 8px;
+}
+
+.card-linea span:not(:last-child)::after {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    background-color: var(--color-texto-secundario);
+    border-radius: 50%;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.card-promedio {
+    margin: 0;
+    font-family: var(--fuente-cuerpo);
+    font-size: 12px;
+    color: var(--color-acento-dorado);
+}
+
+.barra-filtros {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background-color: var(--color-superficie);
+  flex-wrap: wrap;
+}
+
+.filtros-label {
+  font-family: var(--fuente-cuerpo);
+  font-size: 12px;
+  color: var(--color-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}

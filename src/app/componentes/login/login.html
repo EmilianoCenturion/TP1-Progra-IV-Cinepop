@@ -1,0 +1,38 @@
+<div class="logo-wrap">
+    <img src="/logo-cinepop.png" alt="Cinepop" class="logo-img-form">
+</div>
+
+<form class="form" [formGroup]="formLogin" (ngSubmit)="resultadoLogin()">
+    <h2>Ingrese con su email y contraseña</h2>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" formControlName="email">
+    </div>
+
+    <div>
+        <label for="contraseña">contraseña</label>
+        <input type="password" id="contraseña" formControlName="contraseña">
+    </div>
+
+    <button [disabled]="formLogin.invalid" type="submit">Ingresar</button>
+    
+    <button type="button" class="btn-anonimo" (click)="activarFormAnon()">Ingresar como usuario anonimo</button>
+    
+    <a class="link-secundario" routerLink="/registro">¿No tenés cuenta? Registrate</a>
+</form>
+
+
+<form [formGroup]="formAnon" (ngSubmit)="ingresarAnon()" class="form-anonimo" *ngIf="mostrarFormAnon()">
+    <div>
+        <label for="nombreAnon">Nombre</label>
+        <input type="text" id="nombreAnon" formControlName="nombreAnon">
+    </div>
+
+    <div>
+        <label for="emailAnon">Email</label>
+        <input type="email" id="emailAnon" formControlName="emailAnon">
+    </div>
+
+    <button type="submit" [disabled]="formAnon.invalid">Continuar</button>
+</form>

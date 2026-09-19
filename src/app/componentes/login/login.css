@@ -1,0 +1,160 @@
+.form {
+    max-width: 380px;
+    margin: 35px auto;
+    padding: 32px;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-card);
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.form:focus-within {
+    border-color: var(--color-acento-dorado);
+}
+
+.form h2 {
+    font-size: 20px;
+    margin: 0 0 24px;
+    color: var(--color-texto);
+}
+
+.form div {
+    margin-bottom: 16px;
+}
+
+.form label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-texto-secundario);
+    margin-bottom: 6px;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radio-elemento);
+    border: 1px solid var(--color-texto-secundario);
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-cuerpo);
+    font-size: 14px;
+}
+
+.form input:focus {
+    outline: none;
+    border-color: var(--color-acento-dorado);
+}
+
+.form button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: var(--radio-elemento);
+    background-color: var(--color-acento-rojo);
+    color: var(--color-texto);
+    font-family: var(--fuente-titulo);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.form button:disabled {
+    background-color: var(--color-texto-secundario);
+    cursor: not-allowed;
+}
+
+.form button:not(:disabled):hover {
+    opacity: 0.85;
+}
+
+.form-anonimo {
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 32px;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-card);
+    border: 2px solid transparent;
+}
+
+.form-anonimo:focus-within {
+    border-color: var(--color-acento-dorado);
+}
+
+.form-anonimo div {
+    margin-bottom: 16px;
+}
+
+.form-anonimo label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-texto-secundario);
+    margin-bottom: 6px;
+}
+
+.form-anonimo input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radio-elemento);
+    border: 1px solid var(--color-texto-secundario);
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-cuerpo);
+    font-size: 14px;
+}
+
+.form-anonimo input:focus {
+    outline: none;
+    border-color: var(--color-acento-dorado);
+}
+
+.form-anonimo button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: var(--radio-elemento);
+    background-color: var(--color-acento-dorado);
+    color: var(--color-fondo);
+    font-family: var(--fuente-titulo);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.form-anonimo button:disabled {
+    background-color: var(--color-texto-secundario);
+    cursor: not-allowed;
+}
+
+.link-secundario {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-family: var(--fuente-cuerpo);
+    font-size: 15px;
+    color: var(--color-texto-secundario);
+    text-decoration: none;
+}
+
+.link-secundario:hover {
+    color: var(--color-acento-dorado);
+    text-decoration: underline;
+}
+
+.logo-wrap {
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-fondo);
+  margin: 60px 0 24px;
+}
+
+.logo-img-form {
+  height: 170px;
+  width: auto;
+}

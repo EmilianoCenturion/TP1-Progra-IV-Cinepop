@@ -1,0 +1,69 @@
+.nav-principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background-color: var(--color-superficie);
+  border-bottom: 1px solid #3a3745;
+  gap: 24px;
+}
+
+.busqueda-nav {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+}
+
+.busqueda-nav .buscador {
+  width: 100%;
+  padding: 10px 40px 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+}
+
+.busqueda-nav .buscador:focus {
+  outline: none;
+  border-color: var(--color-acento-dorado);
+}
+
+.busqueda-nav .btn-buscar,
+.busqueda-nav .icono-buscar {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-texto-secundario);
+  display: flex;
+}
+
+.busqueda-nav .btn-buscar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.busqueda-nav .btn-buscar:hover {
+  color: var(--color-acento-dorado);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img-nav {
+  height: 36px;
+  width: auto;
+}
