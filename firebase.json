@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/Tp1-pagina-cine/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
