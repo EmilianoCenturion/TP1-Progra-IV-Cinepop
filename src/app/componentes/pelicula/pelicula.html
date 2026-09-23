@@ -1,0 +1,48 @@
+<div *ngIf="!pelicula()" class="cargando">
+    Cargando...
+</div>
+
+<div *ngIf="pelicula() as p" class="ficha-pelicula">
+    <div class="poster">
+        <img [src]="p.imagen_url" [alt]="p.nombre">
+    </div>
+
+    <div class="detalle">
+        <h2>{{ p.nombre }}</h2>
+
+        <div class="info">
+            <span>{{ p.formato }}</span>
+            <span *ngIf="p.clasificacion_edad">+{{ p.clasificacion_edad }}</span>
+            <span>{{ p.idioma }}</span>
+            <span>{{ p.duracion }} min</span>
+        </div>
+
+        <div class="generos">
+            <span *ngFor="let pg of p.peliculas_generos">{{ pg.generos.nombre }}</span>
+        </div>
+
+        <p class="sinopsis">{{ p.sinopsis }}</p>
+
+        <div class="precios">
+            <span>Preventa: ${{ p.precio_preventa }}</span>
+            <span>Normal: ${{ p.precio_normal }}</span>
+        </div>
+
+        <div class="funciones">
+            <h3>Elegí tu función</h3>
+
+            <p *ngIf="funciones().length === 0">No hay funciones disponibles por el momento</p>
+
+            <ul *ngIf="funciones().length > 0">
+                <li *ngFor="let f of funciones()"
+                    (click)="seleccionarFuncion(f)"
+                    [class.seleccionada]="f.id === funcionSeleccionada()?.id">
+                    <span>{{ f.salas.nombre }}</span>
+                    <span>{{ f.fecha_hora | date:'dd/MM HH:mm' }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <button *ngIf="funcionSeleccionada() as funcion"  [routerLink]="['/funcion', funcion.id, 'butacas']">Continuar</button>
+</div>
