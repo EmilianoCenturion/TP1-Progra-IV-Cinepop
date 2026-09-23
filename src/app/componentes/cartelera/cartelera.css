@@ -97,6 +97,7 @@
     overflow: hidden;
     border: 2px solid transparent;
     transition: border-color 0.2s ease;
+    cursor: pointer;
 }
 
 .card-cuerpo img {
@@ -174,19 +175,19 @@
 }
 
 .barra-filtros {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 32px;
-  background-color: var(--color-superficie);
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 32px;
+    background-color: var(--color-superficie);
+    flex-wrap: wrap;
 }
 
 .filtros-label {
-  font-family: var(--fuente-cuerpo);
-  font-size: 12px;
-  color: var(--color-texto-secundario);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
+    font-family: var(--fuente-cuerpo);
+    font-size: 12px;
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
 }
