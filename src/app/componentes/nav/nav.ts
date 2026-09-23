@@ -3,9 +3,10 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../servicios/auth';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { RolAdmin } from '../../directivas/rol-admin';
 
 @Component({
-  imports: [FormsModule, NgIf ,RouterLinkActive, RouterLink],
+  imports: [FormsModule, NgIf, RouterLinkActive, RouterLink, RolAdmin],
   selector: 'app-nav',
   styleUrl: './nav.css',
   templateUrl: './nav.html',
@@ -20,9 +21,9 @@ export class Nav implements OnInit{
 
   async ngOnInit() {
     const usuario = await this.auth.getUser();
-    const emailAnonimo = localStorage.getItem('emailAnonimo');
+    const emailAnon = localStorage.getItem('emailAnon');
 
-    if (usuario || emailAnonimo) {
+    if (usuario || emailAnon) {
       this.usuarioLogueado.set(true);
     } else {
       this.usuarioLogueado.set(false);
@@ -51,7 +52,7 @@ export class Nav implements OnInit{
     }
   }
 
-  mostrarLupa(): boolean{
-    return this.router.url === '/home';
+  mostrarLupa(): boolean {
+    return !(this.router.url === '/cartelera')
   }
 }

@@ -45,7 +45,6 @@ export class Auth {
         const { data: { user }, error } = await this.supabase.auth.getUser()
 
         if (error != null) {
-            console.log(error.message);
             return null;
         } else {
             return user;
