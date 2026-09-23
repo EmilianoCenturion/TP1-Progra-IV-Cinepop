@@ -1,59 +1,33 @@
-# Tp1PaginaCine
+## Decisiones de negocio
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.7.
+### Butacas por sala
+518 butacas en 19 filas: 15 normales (A-I, L-Q) de 28 butacas, 1 fila accesible (letra J, se elimina la K) de 14 butacas, y 3 filas VIP (R, S, T) de 28 butacas cada una, a mayor precio. El tipo de butaca es un solo campo de texto en `butacas`, no tablas separadas. Las filas de cada sala se generan desde Angular (no con un trigger SQL, para no depender de PL/pgSQL, no visto en la materia).
 
-## Development server
+### Usuarios y roles
+`usuarios` (datos de cliente) está separada de `roles_usuarios` (admin/empleado), porque esas cuentas no pasan por el registro público y no tienen los campos obligatorios de un cliente. Sin fila en `roles_usuarios`, se asume cliente. Tipo de sangre, color de ojos y días de vacaciones se guardan porque el cliente los pidió, aunque no condicionan ninguna regla de negocio
 
-To start a local development server, run:
+### Flujo de compra
+Película → Función → Butacas → Candy → Checkout, en pantallas separadas. El precio de cada ítem se congela en `compra_items.precio_unitario` al momento de la compra, para no verse afectado por cambios de precio posteriores.
 
-```bash
-ng serve
-```
+### Butacas en tiempo real
+**Pendiente de implementar.** Se decidió usar Supabase Realtime Broadcast: la selección temporal de butacas se emitiría por canal, sin persistir en la base — solo la compra confirmada crearía filas en `entradas`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La asignación de sala es automática y la regla de 30 minutos entre funciones se valida en el código, no como constraint de SQL. La hora de fin de una función no se guarda: se calcula sumando la duración de la película al horario de inicio.
 
-## Code scaffolding
+### Catálogo y filtros
+Buscador de texto y filtro de género se combinan con AND. Entre géneros seleccionados, es OR (tildar "Terror" y "Acción" muestra películas con cualquiera de los dos) — el comportamiento esperable en un catálogo tipo streaming.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Compra anónima
+Nombre y email del comprador anónimo se guardan en `localStorage`, sin crear usuario real en Supabase Auth. Se pide ese dato mínimo antes de navegar el catálogo (decisión propia, no exigida por el cliente) porque sin un email no habría forma de entregar el PDF/QR de una compra anónima.
 
-```bash
-ng generate component component-name
-```
+### QR compartido (entrada + candy)
+El enunciado es ambiguo sobre si el QR se invalida entero con el primer uso. Se optó por dos columnas booleanas independientes (`ingreso_validado`, `candy_retirado`), permitiendo validar entrada y candy en momentos distintos con el mismo QR.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Puntos y crédito
+Los puntos de fidelización usan una tabla de movimientos (`puntos_movimientos`), porque el cliente pidió historial de canjes; el saldo se calcula sumando movimientos, no se guarda aparte. El crédito por cancelación es una sola columna en `usuarios`, sin historial, porque no se pidió esa trazabilidad.
 
-```bash
-ng generate --help
-```
+### Log de auditoría
+Una columna de texto libre (`descripcion`) por evento, armada desde el código.
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Seguridad
+RLS no está configurado todavía en ninguna tabla — queda pendiente junto con el panel de admin. Por ahora el control de acceso es solo del lado del cliente (guards de Angular), una limitación conocida del estado actual.
