@@ -4,16 +4,16 @@ import { Resenas } from '../../servicios/resenas';
 import { NgFor , NgIf} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
 @Component({
-  imports: [NgFor , NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, RouterLink],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
   router = inject(Router)
-
   peliculasService = inject(Peliculas);
   resenasService = inject(Resenas);
 

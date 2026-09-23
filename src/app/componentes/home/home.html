@@ -4,7 +4,7 @@
 
         <ul class="catalogo">
             <li class="card-pelicula" *ngFor="let pelicula of top3()">
-                <div class="card-cuerpo">
+                <div class="card-cuerpo" [routerLink]="['/pelicula', pelicula.id]">
                     <div class="poster-wrap">
                         <img [src]="pelicula.imagen_url" [alt]="pelicula.nombre">
                     </div>
@@ -25,6 +25,7 @@
                 </div>
             </li>
         </ul>
+        
     </section>
 
     <section>
