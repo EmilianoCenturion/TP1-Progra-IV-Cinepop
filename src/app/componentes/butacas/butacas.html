@@ -1,0 +1,46 @@
+<div *ngIf="!funcion()" class="cargando">
+  Cargando...
+</div>
+
+<div *ngIf="funcion() as f" class="pantalla-butacas">
+  <h2>{{ f.salas.nombre }}</h2>
+
+  <div class="sala">
+    <div class="fila" *ngFor="let grupo of filasAgrupadas()">
+      <span class="letra-fila">{{ grupo.fila }}</span>
+
+      <div class="butacas-fila">
+        <button
+        type="button"
+        class="butaca"
+        [class.ocupada]="estaOcupada(butaca.id)"
+        [class.vip]="butaca.tipo_butaca === 'VIP'"
+        [class.accesible]="butaca.tipo_butaca === 'Accesible'"
+        [class.fin-bloque]="esFinDeBloque(butaca)"
+        [disabled]="estaOcupada(butaca.id)"
+        *ngFor="let butaca of grupo.butacas">
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <div class="leyenda">
+        <div class="leyenda-item">
+            <span class="muestra"></span> Disponible
+        </div>
+        <div class="leyenda-item">
+            <span class="muestra accesible"></span> Accesible
+        </div>
+        <div class="leyenda-item">
+            <span class="muestra vip"></span> VIP
+        </div>
+        <div class="leyenda-item">
+            <span class="muestra seleccionada"></span> Seleccionada
+        </div>
+        <div class="leyenda-item">
+            <span class="muestra ocupada"></span> Ocupada
+        </div>
+    </div>
+
+</div>
+
