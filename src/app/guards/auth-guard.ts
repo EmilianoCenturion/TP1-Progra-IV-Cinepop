@@ -7,17 +7,12 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   
   const usuario = await auth.getUser();
-
-  if (usuario) {
-    return true;
-  }
-
   const emailAnon = localStorage.getItem('emailAnon')
 
-  if (emailAnon) {
+  if (usuario || emailAnon) {
     return true;
   }
-
+  
   router.navigate(['/login']);
   return false;
 };
