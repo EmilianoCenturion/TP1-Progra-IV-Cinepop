@@ -2,45 +2,63 @@
   Cargando...
 </div>
 
-<div *ngIf="funcion() as f" class="pantalla-butacas">
-  <h2>{{ f.salas.nombre }}</h2>
-
+<div *ngIf="funcion()" class="contenido">
   <div class="sala">
     <div class="fila" *ngFor="let grupo of filasAgrupadas()">
-      <span class="letra-fila">{{ grupo.fila }}</span>
-
-      <div class="butacas-fila">
-        <button
-        type="button"
-        class="butaca"
-        [class.ocupada]="estaOcupada(butaca.id)"
-        [class.vip]="butaca.tipo_butaca === 'VIP'"
-        [class.accesible]="butaca.tipo_butaca === 'Accesible'"
-        [class.fin-bloque]="esFinDeBloque(butaca)"
-        [disabled]="estaOcupada(butaca.id)"
-        *ngFor="let butaca of grupo.butacas">
-        </button>
+        <span class="letra-fila">{{ grupo.fila }}</span>
+        
+        <div class="butacas-fila">
+          <button
+          type="button"
+          class="butaca"
+          *ngFor="let butaca of grupo.butacas"
+          [class.ocupada]="estaOcupada(butaca.id)"
+          [class.vip]="butaca.tipo_butaca === 'VIP'"
+          [class.accesible]="butaca.tipo_butaca === 'Accesible'"
+          (click)="seleccionarButacas(butaca)"
+          [class.seleccionada]="estaSeleccionada(butaca.id)"
+          [class.activo]="butacaSeleccionada().includes(butaca.id)"
+          [class.fin-bloque]="esFinDeBloque(butaca)"
+          [disabled]="estaOcupada(butaca.id)">
+          </button>
+        </div>
       </div>
-    </div>
   </div>
 
+  <div class="panel-lateral">
+    <aside class="panel-seleccion">
+      <h3>Butacas seleccionadas</h3>
+
+      <ng-template #sinSeleccion>
+        <p class="panel-vacio">Todavía no seleccionaste ninguna butaca.</p>
+      </ng-template>
+
+      <ul *ngIf="butacaSeleccionada().length > 0; else sinSeleccion">
+        <li *ngFor="let b of butacaSeleccionada()" [class.vip]="b.tipo_butaca === 'VIP'" [class.accesible]="b.tipo_butaca === 'Accesible'">
+          <span class="item-butaca">Fila {{ b.fila }}, Butaca {{ b.numero }}</span>
+          <span class="item-precio">${{ b.precio }}</span>
+        </li>
+      </ul>
+
+      <div class="panel-total" *ngIf="butacaSeleccionada().length > 0">
+        <span>Total</span> <span>${{ total() }}</span>
+      </div>
+    </aside>
+
     <div class="leyenda">
-        <div class="leyenda-item">
-            <span class="muestra"></span> Disponible
-        </div>
-        <div class="leyenda-item">
-            <span class="muestra accesible"></span> Accesible
-        </div>
-        <div class="leyenda-item">
-            <span class="muestra vip"></span> VIP
-        </div>
-        <div class="leyenda-item">
-            <span class="muestra seleccionada"></span> Seleccionada
-        </div>
-        <div class="leyenda-item">
-            <span class="muestra ocupada"></span> Ocupada
-        </div>
+      <div class="leyenda-item"><span class="muestra"></span> Disponible</div>
+      <div class="leyenda-item"><span class="muestra accesible"></span> Accesible</div>
+      <div class="leyenda-item"><span class="muestra vip"></span> VIP</div>
+      <div class="leyenda-item"><span class="muestra seleccionada"></span> Seleccionada</div>
+      <div class="leyenda-item"><span class="muestra ocupada"></span> Ocupada</div>
     </div>
 
+    <button
+      type="button"
+      class="btn-continuar"
+      [hidden]="butacaSeleccionada().length === 0"
+      (click)="irACandy()">
+      Continuar
+    </button>
+  </div>
 </div>
-

@@ -1,9 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { Auth } from './auth';
 
 @Service()
 export class Butaca {
-    cliente = inject(Auth)
+    cliente = inject(Auth);
     
     async generarButacas(salaId: number) {
         const filasNormales = ['A','B','C','D','E','F','G','H','I','L','M','N','O','P','Q'];

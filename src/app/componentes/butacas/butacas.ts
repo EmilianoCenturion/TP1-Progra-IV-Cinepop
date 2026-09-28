@@ -1,8 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { Location, NgFor, NgIf } from '@angular/common';
+import { JsonPipe, Location, NgFor, NgIf } from '@angular/common';
 import { Butaca } from '../../servicios/butaca';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Funciones } from '../../servicios/funciones';
+import { Reserva } from '../../servicios/reserva';
+
 
 @Component({
   imports: [NgIf, NgFor],
@@ -16,23 +18,27 @@ export class Butacas implements OnInit {
   filasAgrupadas = signal<any[]>([]);
   idsOcupados = signal<number[]>([]);
 
-  constructor(private butacaService: Butaca, 
-    private route: ActivatedRoute, 
-    private location: Location, 
-    private funciones: Funciones) {}
+  butacaSeleccionada = signal<any[]>([]);
+
+  constructor(private butacaService: Butaca,
+    private route: ActivatedRoute,
+    private location: Location,
+    private funciones: Funciones,
+    private router: Router,
+    private reserva: Reserva) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe( async params => {
+    this.route.paramMap.subscribe(async params => {
       const id = params.get('id')
 
-      if(!id) {
+      if (!id) {
         this.location.back();
         return;
       }
 
       const resultado = await this.funciones.getFuncionId(Number(id));
       const resultadoButacasOcupadas = await this.butacaService.getButacasOcupadas(Number(id))
-      
+
       if (!resultado || !resultadoButacasOcupadas) {
         this.location.back();
         return;
@@ -60,7 +66,10 @@ export class Butacas implements OnInit {
       if (ultimoGrupo && ultimoGrupo.fila === butaca.fila) {
         ultimoGrupo.butacas.push(butaca);
       } else {
-        grupos.push( { fila: butaca.fila, butacas: [butaca] })
+        if (ultimoGrupo && ultimoGrupo.fila === 'J') {
+          grupos.push({ fila: 'K', butacas: [] });
+        }
+        grupos.push({ fila: butaca.fila, butacas: [butaca] });
       }
     }
 
@@ -73,8 +82,54 @@ export class Butacas implements OnInit {
 
   esFinDeBloque(butaca: any): boolean {
   if (butaca.tipo_butaca === 'Accesible') {
-    return butaca.numero === 2 || butaca.numero === 12;
+    return false;
   }
   return butaca.numero === 4 || butaca.numero === 24;
-}
+  }
+
+  seleccionarButacas(id: number) {
+    
+    if (this.estaOcupada(id)) {
+      return
+    }
+    
+    const butacaActual = this.butacaSeleccionada();
+    const nuevaLista: any[] = [];
+
+    let encontrado = false;
+
+    for (let butacaId of butacaActual) {
+      if (butacaId === id) {
+        encontrado = true;
+      } else {
+        nuevaLista.push(butacaId)
+      }
+    }
+
+    if (!encontrado) {
+      nuevaLista.push(id)
+    }
+
+    this.butacaSeleccionada.set(nuevaLista);
+  }
+
+  estaSeleccionada(butacaId: any) {
+    return this.butacaSeleccionada().some(b => b.id === butacaId)
+  }
+
+  total() {
+    let suma = 0;
+
+    for (let b of this.butacaSeleccionada()) {
+      suma += b.precio;
+    }
+
+    return suma;
+  }
+
+  irACandy() {
+    this.reserva.setFuncionId(this.funcion().id);
+    this.reserva.setButacas(this.butacaSeleccionada());
+    this.router.navigate(['/funcion', this.funcion().id, 'candy'])
+  }
 }
