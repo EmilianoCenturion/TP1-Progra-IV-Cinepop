@@ -124,3 +124,9 @@
     font-size: 13px;
     margin: 0 0 16px;
 }
+
+
+.form input.campo-error,
+.form input.campo-error:focus {
+    border-color: #ff6b6b;
+}

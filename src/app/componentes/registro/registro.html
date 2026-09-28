@@ -13,7 +13,17 @@
 
     <div>
         <label for="contraseña">Contraseña</label>
-        <input type="password" id="contraseña" formControlName="contraseña" placeholder="Mínimo 6 caracteres">
+        <input type="password" id="contraseña" formControlName="contraseña" placeholder="Mínimo 6 caracteres"
+            [class.campo-error]="formRegistro.hasError('losControlesNoCoinciden') && formRegistro.get('confirmarContraseña')?.dirty">
+    </div>
+
+    <div>
+        <label for="confirmarContraseña">Confirmar contraseña</label>
+        <input type="password" id="confirmarContraseña" formControlName="confirmarContraseña"
+            [class.campo-error]="formRegistro.hasError('losControlesNoCoinciden') && formRegistro.get('confirmarContraseña')?.dirty">
+        <p class="mensaje-error" *ngIf="formRegistro.hasError('losControlesNoCoinciden') && formRegistro.get('confirmarContraseña')?.dirty">
+            Las contraseñas no coinciden.
+        </p>
     </div>
 
     <div>

@@ -3,6 +3,7 @@ import { Auth } from '../../servicios/auth';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { clavesCoincidenValidator } from '../../validadores/claves-coinciden';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink, NgIf],
@@ -17,16 +18,17 @@ export class Registro {
   formRegistro! : FormGroup;
   
   constructor (private auth: Auth, private fb: FormBuilder , private router: Router) {
-    this.formRegistro = this.fb.group({ 
+    this.formRegistro = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
       contraseña: ["", [Validators.required, Validators.minLength(6)]],
+      confirmarContraseña: ["", [Validators.required]],
       nombre: ["", [Validators.required, Validators.minLength(2)]],
       apellido: ["", [Validators.required, Validators.minLength(2)]],
       fechaNacimiento: ["", [Validators.required]],
       tipoSangre: ["", [Validators.required, Validators.minLength(2)]],
       colorOjos: ["", [Validators.required, Validators.minLength(2)]],
       diasVacaciones: [0, [Validators.required, Validators.min(0), Validators.max(30)]]
-    });
+    }, { validators: clavesCoincidenValidator('contraseña', 'confirmarContraseña') });
   }
   
   async resultadoRegistro() {
