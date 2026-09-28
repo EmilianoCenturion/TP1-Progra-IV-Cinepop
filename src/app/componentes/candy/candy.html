@@ -1,0 +1,42 @@
+<div class="pantalla-candy">
+  <h2>Candy Bar</h2>
+
+  <div class="contenido-candy">
+    <div class="categorias-lista">
+      <div class="categoria" *ngFor="let cat of categorias()">
+        <h3>{{ cat.nombre }}</h3>
+
+        <div class="productos">
+          <div class="producto" *ngFor="let prod of cat.productos_candy">
+            <img [src]="prod.imagen_ruta" [alt]="prod.nombre" class="producto-imagen">
+            <span class="producto-nombre">{{ prod.nombre }}</span>
+            <span class="producto-precio">${{ prod.precio }}</span>
+
+            <div class="controles">
+              <button type="button" (click)="quitar(prod)" [disabled]="cantidadEnCarrito(prod.id) === 0">-</button>
+              <span>{{ cantidadEnCarrito(prod.id) }}</span>
+              <button type="button" (click)="agregar(prod)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="resumen-carrito">
+      <h3>Tu pedido</h3>
+
+      <ng-container *ngIf="carrito().length > 0; else vacioCarrito">
+        <ul>
+          <li *ngFor="let item of carrito()">
+            {{ item.producto.nombre }} x{{ item.cantidad }} — ${{ item.producto.precio * item.cantidad }}
+          </li>
+        </ul>
+        <p class="total">Total: ${{ total() }}</p>
+      </ng-container>
+
+      <ng-template #vacioCarrito>
+        <p class="panel-vacio">Todavía no agregaste nada a tu pedido.</p>
+      </ng-template>
+    </aside>
+  </div>
+</div>
