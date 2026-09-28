@@ -25,6 +25,8 @@ export class Auth {
 
         if (error != null) {
             return error.message;
+        } else if (data.user?.identities?.length === 0) {
+            return 'Ese email ya está registrado';
         } else {
             const { error: insertError }  = await this.supabase.from('usuarios').insert({id: data.user?.id, nombre, apellido, fecha_nacimiento, tipo_sangre, color_ojos, dias_vacaciones});
             return insertError?.message ?? null;

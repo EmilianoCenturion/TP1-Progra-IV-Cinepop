@@ -118,3 +118,9 @@
   height: 170px;
   width: auto;
 }
+
+.mensaje-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin: 0 0 16px;
+}

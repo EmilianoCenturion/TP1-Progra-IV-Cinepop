@@ -13,7 +13,7 @@
 
     <div>
         <label for="contraseña">Contraseña</label>
-        <input type="password" id="contraseña" formControlName="contraseña">
+        <input type="password" id="contraseña" formControlName="contraseña" placeholder="Mínimo 6 caracteres">
     </div>
 
     <div>
@@ -56,6 +56,8 @@
         <input type="number" id="diasVacaciones" formControlName="diasVacaciones" min="0">
     </div>
     
+    <p class="mensaje-error" *ngIf="mensajeError()">{{ mensajeError() }}</p>
+
     <button [disabled]="formRegistro.invalid" type="submit">Registrarme</button>
     
     <a class="link-secundario" routerLink="/login">¿Ya tenés cuenta? Iniciá sesión</a>
