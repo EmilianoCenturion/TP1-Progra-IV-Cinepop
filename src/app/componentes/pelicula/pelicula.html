@@ -44,5 +44,9 @@
         </div>
     </div>
 
-    <button *ngIf="funcionSeleccionada() as funcion"  [routerLink]="['/funcion', funcion.id, 'butacas']">Continuar</button>
+    <button *ngIf="funcionSeleccionada() as funcion; else sinSeleccion "  [routerLink]="['/funcion', funcion.id, 'butacas']">Continuar</button>
+
+    <ng-template #sinSeleccion>
+        <p>Selecciona una funcion para continuar</p>
+    </ng-template>
 </div>
