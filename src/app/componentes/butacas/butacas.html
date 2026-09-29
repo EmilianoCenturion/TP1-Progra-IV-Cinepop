@@ -17,7 +17,6 @@
           [class.accesible]="butaca.tipo_butaca === 'Accesible'"
           (click)="seleccionarButacas(butaca)"
           [class.seleccionada]="estaSeleccionada(butaca.id)"
-          [class.activo]="butacaSeleccionada().includes(butaca.id)"
           [class.fin-bloque]="esFinDeBloque(butaca)"
           [disabled]="estaOcupada(butaca.id)">
           </button>

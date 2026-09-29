@@ -87,27 +87,27 @@ export class Butacas implements OnInit {
   return butaca.numero === 4 || butaca.numero === 24;
   }
 
-  seleccionarButacas(id: number) {
-    
-    if (this.estaOcupada(id)) {
+  seleccionarButacas(butaca: any) {
+
+    if (this.estaOcupada(butaca.id)) {
       return
     }
-    
+
     const butacaActual = this.butacaSeleccionada();
     const nuevaLista: any[] = [];
 
     let encontrado = false;
 
-    for (let butacaId of butacaActual) {
-      if (butacaId === id) {
+    for (let b of butacaActual) {
+      if (b.id === butaca.id) {
         encontrado = true;
       } else {
-        nuevaLista.push(butacaId)
+        nuevaLista.push(b)
       }
     }
 
     if (!encontrado) {
-      nuevaLista.push(id)
+      nuevaLista.push(butaca)
     }
 
     this.butacaSeleccionada.set(nuevaLista);
@@ -121,7 +121,8 @@ export class Butacas implements OnInit {
     let suma = 0;
 
     for (let b of this.butacaSeleccionada()) {
-      suma += b.precio;
+      // precio es numeric en Supabase y llega como string
+      suma += Number(b.precio);
     }
 
     return suma;

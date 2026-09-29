@@ -246,3 +246,21 @@
 .panel-seleccion li:last-child {
     border-bottom: none;
 }
+.btn-continuar {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.btn-continuar:hover {
+  filter: brightness(1.1);
+}
