@@ -2,11 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { signal } from '@angular/core';
 import { Peliculas } from '../../servicios/peliculas';
 import { FormsModule} from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgFor} from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CardPelicula } from '../card-pelicula/card-pelicula';
 
 @Component({
-  imports: [FormsModule, NgFor, NgIf, RouterLink],
+  imports: [FormsModule, NgFor, CardPelicula],
   selector: 'app-cartelera',
   styleUrl: './cartelera.css',
   templateUrl: './cartelera.html',
@@ -14,6 +15,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 export class Cartelera implements OnInit{
   peliculasService = inject(Peliculas);
   activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
 
   filtro = "";
 
@@ -75,5 +77,9 @@ export class Cartelera implements OnInit{
 
     this.generosSeleccionados.set(nuevaLista);
     this.filtrarPelicula();
+  }
+
+  verPelicula(id: number) {
+    this.router.navigate(['/pelicula', id]);
   }
 }

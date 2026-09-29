@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Peliculas } from '../../servicios/peliculas';
 import { Resenas } from '../../servicios/resenas';
-import { NgFor , NgIf} from '@angular/common';
+import { NgFor} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
+import { CardPelicula } from '../card-pelicula/card-pelicula';
 
 @Component({
-  imports: [NgFor, NgIf, FormsModule, RouterLink],
+  imports: [NgFor, FormsModule, CardPelicula],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',
@@ -37,5 +38,9 @@ export class Home implements OnInit {
     this.peliculas.set(await this.peliculasService.getPeliculas());
     this.top3.set(await this.peliculasService.tresPeliculasMasVendidas());
     this.resenas.set(await this.resenasService.getResenas());
+  }
+
+  verPelicula(id: number) {
+    this.router.navigate(['/pelicula', id]);
   }
 }
