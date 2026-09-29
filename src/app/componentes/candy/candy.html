@@ -37,6 +37,11 @@
       <ng-template #vacioCarrito>
         <p class="panel-vacio">Todavía no agregaste nada a tu pedido.</p>
       </ng-template>
+
+      <!-- El candy es opcional: se puede continuar con el carrito vacío -->
+      <button type="button" class="btn-continuar" (click)="continuar()">
+        {{ carrito().length > 0 ? 'Continuar' : 'Continuar sin candy' }}
+      </button>
     </aside>
   </div>
 </div>

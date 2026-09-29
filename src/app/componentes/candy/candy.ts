@@ -88,7 +88,7 @@ export class Candy {
   }
 
   continuar() {
-    this.reserva.serCarrito(this.carrito());
+    this.reserva.setCarrito(this.carrito());
     this.router.navigate(['/funcion', this.reserva.funcionId(), 'checkout']);
   }
 }

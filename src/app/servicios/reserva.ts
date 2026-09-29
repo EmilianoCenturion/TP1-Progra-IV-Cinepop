@@ -14,7 +14,7 @@ export class Reserva {
         this.butacasSeleccionadas.set(butacas);
     }
 
-    serCarrito(carrito: any[]) {
+    setCarrito(carrito: any[]) {
         this.carritoCandy.set(carrito);
     }
 
