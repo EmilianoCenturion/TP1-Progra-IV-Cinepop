@@ -14,11 +14,13 @@ export class Compra {
     ) {
         const user = await this.cliente.getUser();
         const usuarioId = user?.id ?? null;
+        const email = user?.email ?? localStorage.getItem('emailAnon')
 
         const { data: compra, error: errorCompra } = await this.cliente.client()
         .from('compras')
         .insert({
             usuario_id: usuarioId,
+            email_comprador: email,
             total_pagado: total,
             metodo_pago: metodoPago,
             fecha_compra: new Date().toISOString(),

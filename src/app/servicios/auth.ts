@@ -53,6 +53,27 @@ export class Auth {
         }
     }
 
+    async getPerfil() {
+        const user = await this.getUser();
+
+        if (user == null) {
+            return null
+        }
+
+        const { data, error } = await this.supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+        if (error != null) {
+            console.log(error);
+            return null;
+        }
+
+        return data;
+    }
+
     client() {
         return this.supabase;
     }
