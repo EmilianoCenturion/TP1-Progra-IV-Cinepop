@@ -34,6 +34,9 @@ export const routes: Routes = [
             },
             {
                 path: 'funcion/:id/candy', loadComponent: () => import("./componentes/candy/candy").then((c) => c.Candy)
+            },
+            {
+                path: 'funcion/:id/checkout', loadComponent: () => import("./componentes/checkout/checkout").then((c) => c.Checkout)
             }
         ]
     }

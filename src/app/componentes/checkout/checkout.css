@@ -1,0 +1,93 @@
+.pantalla-checkout {
+  max-width: 560px;
+  margin: 32px auto;
+  padding: 24px;
+  background-color: var(--color-superficie);
+  border-radius: var(--radio-card);
+}
+
+.funcion {
+  color: var(--color-texto-secundario);
+  margin-top: -8px;
+}
+
+.bloque {
+  margin-bottom: 20px;
+}
+
+.bloque ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bloque li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bloque li.vip strong {
+  color: var(--color-acento-dorado);
+  margin-left: 6px;
+}
+
+.bloque select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fuente-titulo);
+  font-size: 20px;
+}
+
+.total span {
+  color: var(--color-acento-rojo);
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.btn-confirmar {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-confirmar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.aviso {
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  background-color: rgba(232, 170, 61, 0.12);
+  color: var(--color-acento-dorado);
+  font-size: 14px;
+}
+
+.confirmar-edad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  cursor: pointer;
+}

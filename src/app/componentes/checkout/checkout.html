@@ -1,1 +1,83 @@
-<p>checkout works!</p>
+<div class="pantalla-checkout" *ngIf="!resultado(); else compraOk">
+  <h2>Confirmá tu compra</h2>
+
+  <p class="funcion" *ngIf="funcion() as f">
+    {{ f.peliculas.nombre }} · {{ f.salas.nombre }} · {{ f.fecha_hora | date:'dd/MM HH:mm' }}
+  </p>
+
+  <section class="bloque">
+    <h3>Entradas</h3>
+    <ul>
+      <li *ngFor="let b of butacas()" [class.vip]="b.tipo_butaca === 'VIP'">
+        <span>Fila {{ b.fila }}, butaca {{ b.numero }}
+          <strong *ngIf="b.tipo_butaca === 'VIP'">VIP</strong>
+          <strong *ngIf="b.tipo_butaca === 'Accesible'">Accesible</strong>
+        </span>
+        <span>${{ b.precio }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="bloque" *ngIf="carritoCandy().length > 0">
+    <h3>Candy</h3>
+    <ul>
+      <li *ngFor="let item of carritoCandy()">
+        <span>{{ item.producto.nombre }} x{{ item.cantidad }}</span>
+        <span>${{ item.producto.precio * item.cantidad }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="bloque">
+    <label for="metodoPago">Método de pago</label>
+    <select id="metodoPago" [(ngModel)]="metodoPago">
+      <option value="Tarjeta">Tarjeta</option>
+      <option value="Efectivo">Efectivo</option>
+    </select>
+  </section>
+
+  <p class="aviso" *ngIf="edadMinima() > 0">
+    Película para mayores de {{ edadMinima() }} años. Los menores deben ir acompañados de un adulto.
+  </p>
+
+  <label class="confirmar-edad" *ngIf="debeConfirmarEdad()">
+    <input type="checkbox" [(ngModel)]="confirmarEdad">
+    Declaro que tengo {{ edadMinima() }} años o más.
+  </label>
+
+  <p class="error" *ngIf="bloqueadaPorEdad()">
+    Esta película es para mayores de {{ edadMinima() }} años. No podés comprar entradas.
+  </p>
+
+  <p class="error" *ngIf="funcionPasada()">
+    Esta función ya comenzó. Elegí otra función.
+  </p>
+
+  <p class="total">Total <span>${{ total() }}</span></p>
+
+  <p class="error" *ngIf="errorConfirmar()">No se pudo confirmar la compra. Probá de nuevo.</p>
+
+  <button type="button" class="btn-confirmar" (click)="confirmar()" [disabled]="!puedeConfirmar()">
+    {{ procesando() ? 'Procesando...' : 'Confirmar compra' }}
+  </button>
+</div>
+
+<ng-template #compraOk>
+  <div class="pantalla-checkout">
+    <h2>¡Compra confirmada!</h2>
+    <p>Compra N° {{ resultado().compra.id }} · Total ${{ resultado().compra.total_pagado }}</p>
+
+    <p class="aviso" *ngIf="edadMinima() > 0">
+      Película +{{ edadMinima() }}: los menores deben ir acompañados de un adulto.
+    </p>
+
+    <h3>Tus códigos de entrada</h3>
+    <ul>
+      <li *ngFor="let e of resultado().entradas">{{ e.qr }}</li>
+    </ul>
+
+    <button type="button" class="btn-confirmar" (click)="descargarPdf()">
+      Descargar entradas (PDF)
+    </button>
+  </div>
+</ng-template>
