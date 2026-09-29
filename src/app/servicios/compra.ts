@@ -10,7 +10,8 @@ export class Compra {
         butacas: any[],
         carritoCandy: any[],
         metodoPago: string,
-        total: number
+        total: number,
+        cuponId: number | null
     ) {
         const user = await this.cliente.getUser();
         const usuarioId = user?.id ?? null;
@@ -24,6 +25,7 @@ export class Compra {
             total_pagado: total,
             metodo_pago: metodoPago,
             fecha_compra: new Date().toISOString(),
+            cupon_id: cuponId
         })
         .select()
         .single()

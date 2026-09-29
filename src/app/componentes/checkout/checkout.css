@@ -91,3 +91,56 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+.cupon-fila {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.cupon-fila input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  text-transform: uppercase;
+}
+
+.cupon-fila button,
+.cupon-aplicado button {
+  padding: 0 16px;
+  border: 1px solid var(--color-acento-dorado);
+  border-radius: var(--radio-elemento);
+  background: transparent;
+  color: var(--color-acento-dorado);
+  cursor: pointer;
+}
+
+.cupon-fila button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cupon-aplicado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  background-color: rgba(232, 170, 61, 0.12);
+  color: var(--color-acento-dorado);
+}
+
+.cupon-aplicado button {
+  padding: 6px 12px;
+}
+
+.linea-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  color: var(--color-texto-secundario);
+}

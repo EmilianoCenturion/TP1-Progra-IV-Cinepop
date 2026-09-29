@@ -36,6 +36,27 @@
     </select>
   </section>
 
+  <section class="bloque">
+    <label for="cupon">Cupón de descuento</label>
+
+    <div class="cupon-fila" *ngIf="!cuponAplicado(); else cuponOk">
+      <input id="cupon" type="text" [(ngModel)]="codigoCupon" placeholder="Ingresá tu código">
+      <button type="button" (click)="aplicarCupon()" [disabled]="!codigoCupon.trim()">Aplicar</button>
+    </div>
+
+    <ng-template #cuponOk>
+      <div class="cupon-aplicado">
+        <span>
+          <strong>{{ cuponAplicado().codigo_cupon }}</strong> · {{ cuponAplicado().porcentaje_descuento }}% off
+          <small *ngIf="cuponAplicado().tipo_cupon === 'Primera compra'">(¡por ser tu primera compra!)</small>
+        </span>
+        <button type="button" (click)="quitarCupon()">Quitar</button>
+      </div>
+    </ng-template>
+
+    <p class="error" *ngIf="errorCupon()">{{ errorCupon() }}</p>
+  </section>
+
   <p class="aviso" *ngIf="edadMinima() > 0">
     Película para mayores de {{ edadMinima() }} años. Los menores deben ir acompañados de un adulto.
   </p>
@@ -52,6 +73,11 @@
   <p class="error" *ngIf="funcionPasada()">
     Esta función ya comenzó. Elegí otra función.
   </p>
+
+  <ng-container *ngIf="cuponAplicado()">
+    <p class="linea-total">Subtotal <span>${{ subtotal() }}</span></p>
+    <p class="linea-total">Descuento <span>-${{ descuento() }}</span></p>
+  </ng-container>
 
   <p class="total">Total <span>${{ total() }}</span></p>
 

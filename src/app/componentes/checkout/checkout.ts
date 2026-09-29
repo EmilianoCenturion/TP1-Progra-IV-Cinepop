@@ -1,4 +1,4 @@
-import { Component, importProvidersFrom, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Reserva } from '../../servicios/reserva';
 import { Compra } from '../../servicios/compra';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Auth } from '../../servicios/auth';
 import { calcularEdad } from '../../utils/edad';
 import { PdfEntradas } from '../../servicios/pdf-entradas';
+import { Cupones } from '../../servicios/cupones';
 
 @Component({
   imports: [NgIf, NgFor, FormsModule, DatePipe],
@@ -22,10 +23,15 @@ export class Checkout {
   private funcionesService = inject(Funciones);
   private auth = inject(Auth);
   private pdfService = inject(PdfEntradas);
+  private cuponesService = inject(Cupones)
 
   butacas = this.reservaService.butacasSeleccionadas;
   carritoCandy = this.reservaService.carritoCandy;
   
+  cuponAplicado = signal<any>(null);
+  errorCupon = signal('');
+  codigoCupon = '';
+  private usuarioId: string | null = null;
   resumen = signal<any>(null);
   edadUsuario = signal<number | null>(null);
   funcionPasada = signal(false);
@@ -56,7 +62,14 @@ export class Checkout {
       const perfil = await this.auth.getPerfil();
 
       if (perfil) {
+        this.usuarioId = perfil.id;
+
         this.edadUsuario.set(calcularEdad(perfil.fecha_nacimiento));
+
+        // Beneficio por registrarse: se aplica solo si es su primera compra
+        if ( await this.cuponesService.esPrimeraCompra(perfil.id)) {
+          this.cuponAplicado.set( await this.cuponesService.getCuponPrimeraCompra())
+        }
       }
   }
 
@@ -80,8 +93,62 @@ export class Checkout {
     return suma;
   }
 
-  total() {
+  subtotal() {
     return this.totalButacas() + this.totalCandy();
+  }
+
+  descuento () {
+    const cupon = this.cuponAplicado();
+
+    if (!cupon) {
+      return 0;
+    }
+
+    return Math.round(this.subtotal() * cupon.porcentaje_descuento / 100);
+  }
+
+  total() {
+    return this.subtotal() - this.descuento()
+  }
+
+  async aplicarCupon() {
+    this.errorCupon.set('');
+
+    const cupon = await this.cuponesService.getCuponPorCodigo(this.codigoCupon);
+
+    if (!cupon) {
+      this.errorCupon.set('El cupón no existe o no está activo')
+      return;
+    }
+
+    if (cupon.tipo_cupon === 'Mayor de 50') {
+      const edad = this.edadUsuario();
+
+      if (edad === null) {
+        this.errorCupon.set('Iniciá sesión para usar este cupón')
+        return;
+      }
+
+      if (edad <= 50) {
+        this.errorCupon.set('Este cupón es solo para mayores de 50 años')
+        return;
+      }
+    }
+
+    if (cupon.tipo_cupon === 'Primera compra') {
+      if (!this.usuarioId || !(await this.cuponesService.esPrimeraCompra(this.usuarioId))) {
+        this.errorCupon.set('Este cupón es solo para la primera compra de usuarios registrados');
+        return;
+      }
+    }
+
+    // Un solo cupon por compra: reemplaza al que hubiera
+    this.cuponAplicado.set(cupon);
+    this.codigoCupon = '';
+  }
+
+  quitarCupon() {
+    this.cuponAplicado.set(null);
   }
 
   async confirmar() {
@@ -98,7 +165,8 @@ export class Checkout {
       this.butacas(),
       this.carritoCandy(),
       this.metodoPago,
-      this.total()
+      this.total(),
+      this.cuponAplicado()?.id ?? null
     );
 
     this.procesando.set(false);
