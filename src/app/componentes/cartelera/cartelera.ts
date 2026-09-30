@@ -57,6 +57,13 @@ export class Cartelera implements OnInit{
     this.peliculasFiltradas.set(resultado);
   }
 
+  buscar() {
+    this.router.navigate([], {
+      queryParams: { buscar: this.filtro || null}, // null saca el parametro si esta vacio
+      replaceUrl: true // no llena el historial con cada letra
+    });
+  }
+
   seleccionaGenero(id: number) {
     const actual = this.generosSeleccionados();
     const nuevaLista: number[] = [];

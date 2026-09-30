@@ -1,23 +1,23 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../servicios/auth';
-import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { RolAdmin } from '../../directivas/rol-admin';
+import { Reserva } from '../../servicios/reserva';
+
 
 @Component({
-  imports: [FormsModule, NgIf, RouterLinkActive, RouterLink, RolAdmin],
+  imports: [NgIf, RouterLinkActive, RouterLink, RolAdmin],
   selector: 'app-nav',
   styleUrl: './nav.css',
   templateUrl: './nav.html',
 })
 export class Nav implements OnInit{
+  reservasService = inject(Reserva);
   router = inject(Router);
   auth = inject(Auth);
 
   usuarioLogueado = signal(false);
-
-  filtro = "";
 
   async ngOnInit() {
     const usuario = await this.auth.getUser();
@@ -35,24 +35,18 @@ export class Nav implements OnInit{
     return rutasSinNav.includes(this.router.url);
   }
 
-  buscarEnCartelera() {
-    if (this.filtro.trim() === "") {
-      this.router.navigate(['/cartelera']);
-    } else {
-      this.router.navigate(['/cartelera'], { queryParams: { buscar: this.filtro } });
-    }
-  }
+  async cerrarSesion() {
+    await this.auth.signOut();
 
-  buscarEnvio() {
-    if (this.router.url.startsWith('/cartelera')) {
-      this.router.navigate(['/cartelera'], {
-        queryParams: { buscar: this.filtro },
-        queryParamsHandling: 'merge'
-      });
-    }
-  }
+    // El anonimo no tiene sesion en Supabase: se "desloguea" borrando sus datos en el localStorage
 
-  mostrarLupa(): boolean {
-    return !(this.router.url === '/cartelera')
+    localStorage.removeItem('emailAnon');
+    localStorage.removeItem('nombreAnon');
+
+    // Que no quede una compra a medias de la sesion anterior
+
+    this.reservasService.limpiar();
+
+    this.router.navigate(['/login']);
   }
 }

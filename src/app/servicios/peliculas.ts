@@ -5,6 +5,20 @@ import { Auth } from './auth';
 export class Peliculas {
     cliente = inject(Auth)
 
+    private calcularPromedio(resenas: any[]) {
+        if ( resenas.length === 0) {
+            return null;
+        }   
+
+        let suma = 0;
+
+        for (let r of resenas) {
+            suma += r.calificacion;
+        }
+
+        return Math.round((suma / resenas.length) * 10) / 10
+    }
+
     async getPeliculas() {
 
         const { data, error } = await this.cliente.client()
@@ -16,21 +30,11 @@ export class Peliculas {
             
             return []
         } 
+        
 
         const peliculasConPromedio = data.map((pelicula: any) => {
-            let promedio = null;
-
-            if (pelicula.resenas.length > 0) {
-                let suma = 0;
-                
-                for (let r of pelicula.resenas) {
-                    suma = suma + r.calificacion;
-                }
-
-                promedio = suma / pelicula.resenas.length;
-            }
             
-            pelicula.promedio = promedio;
+            pelicula.promedio = this.calcularPromedio(pelicula.resenas);
 
             return pelicula;
         });
@@ -42,8 +46,9 @@ export class Peliculas {
 
         const { data, error } = await this.cliente.client()
         .from('peliculas')
-        .select('*, peliculas_generos(genero_id, generos(nombre))')
+        .select('*, peliculas_generos(genero_id, generos(nombre)), resenas(calificacion, comentario, creado_en, usuarios(nombre))')
         .eq('id', id)
+        .order('creado_en', { referencedTable: 'resenas', ascending: false})
         .single()
 
         if (error != null) {
@@ -51,6 +56,8 @@ export class Peliculas {
             
             return null
         } 
+
+        data.promedio = this.calcularPromedio(data.resenas);
 
         return data;
     };
@@ -69,19 +76,7 @@ export class Peliculas {
         data.forEach(pelicula => {
             pelicula.cantidadVendida = this.contarEntradasVendidas(pelicula);
 
-            let promedio = null;
-
-            if (pelicula.resenas.length > 0) {
-                let suma = 0;
-
-                for (let r of pelicula.resenas) {
-                    suma = suma + r.calificacion;
-                }
-
-                promedio = suma / pelicula.resenas.length;
-            }
-
-            pelicula.promedio = promedio;
+            this.calcularPromedio(pelicula.resenas);
         });
 
         data.sort((a, b) => b.cantidadVendida - a.cantidadVendida);

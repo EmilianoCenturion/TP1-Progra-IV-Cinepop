@@ -8,8 +8,8 @@
 
 .buscador {
     width: 100%;
-    max-width: 420px;
-    margin-bottom: 16px;
+    max-width: 280px;
+    margin-bottom: 0px;
     padding: 6px 4px;
     background: transparent;
     border: none;
@@ -67,7 +67,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 0px;
 }
 
 .chip-genero {

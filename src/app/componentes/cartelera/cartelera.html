@@ -1,7 +1,10 @@
 <div class="cartelera">
 
     <div class="barra-filtros">
-        <span class="filtros-label">Filtrar por género</span>
+        <input type="text" class="buscador" [(ngModel)]="filtro" (input)="buscar()" placeholder="Buscar película...">
+
+        <span class="filtros-label">Géneros</span>
+        
         <div class="filtro-generos">
             <button
                 type="button"

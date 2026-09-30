@@ -42,6 +42,28 @@
                 </li>
             </ul>
         </div>
+
+        <div class="resenas">
+            <h3>
+                Reseñas
+                <span class="promedio" *ngIf="p.promedio">★ {{ p.promedio }} de 5 ({{ p.resenas.length }})</span>
+            </h3>
+
+            <p class="sin-resenas" *ngIf="p.resenas.length === 0">Todavía nadie reseñó esta película.</p>
+
+            <ul *ngIf="p.resenas.length > 0">
+                <li class="resena" *ngFor="let r of p.resenas">
+                    <div class="resena-meta">
+                        <span class="resena-usuario">{{ r.usuarios?.nombre }}</span>
+                        <span class="resena-estrellas">
+                            <span *ngFor="let n of estrellas" [class.llena]="n <= r.calificacion">★</span>
+                        </span>
+                        <span class="resena-fecha">{{ r.creado_en | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                    <p class="resena-comentario">{{ r.comentario }}</p>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <button *ngIf="funcionSeleccionada() as funcion; else sinSeleccion "  [routerLink]="['/funcion', funcion.id, 'butacas']">Continuar</button>

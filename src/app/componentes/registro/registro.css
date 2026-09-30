@@ -130,3 +130,10 @@
 .form input.campo-error:focus {
     border-color: #ff6b6b;
 }
+
+.fecha-selects {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.3fr;
+    gap: 8px;
+}
+

@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './pelicula.html',
 })
 export class Pelicula implements OnInit{
+  
+  estrellas = [1, 2, 3, 4, 5];
 
   pelicula = signal<any | null>(null);
 

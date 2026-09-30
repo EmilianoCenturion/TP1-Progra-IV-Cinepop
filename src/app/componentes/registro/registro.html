@@ -37,8 +37,27 @@
     </div>
 
     <div>
-        <label for="fechaNacimiento">Fecha de nacimiento</label>
-        <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento">
+        <label>Fecha de nacimiento</label>
+        
+        <div class="fecha-selects">
+            <select formControlName="diaNacimiento" aria-label="Día">
+                <option value="" disabled>Día</option>
+                <option *ngFor="let d of dias" [value]="d">{{ d }}</option>
+            </select>
+
+            <select formControlName="mesNacimiento" aria-label="Mes">
+                <option value="" disabled>Mes</option>
+                <option *ngFor="let m of meses; let i = index" [value]="i + 1">{{ m }}</option>
+            </select>
+
+            <select formControlName="anioNacimiento" aria-label="Año">
+                <option value="" disabled>Año</option>
+                <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
+            </select>
+        
+        </div>
+        
+        <p class="mensaje-error" *ngIf="formRegistro.hasError('fechaInvalida')">Esa fecha no existe.</p>
     </div>
 
     <div>
