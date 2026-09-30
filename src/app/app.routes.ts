@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
+import { rolGuard } from './guards/rol-guard';
 
 export const routes: Routes = [
     {
@@ -37,6 +38,21 @@ export const routes: Routes = [
             },
             {
                 path: 'funcion/:id/checkout', loadComponent: () => import("./componentes/checkout/checkout").then((c) => c.Checkout)
+            },
+            {
+                path: 'admin',
+                canActivate: [rolGuard('Admin')],
+                loadComponent: () => import("./componentes/admin/panel-admin/panel-admin").then((c) => c.PanelAdmin),
+                children : [ 
+                    {
+                        path: "",
+                        loadComponent: () => import("./componentes/admin/admin-inicio/admin-inicio").then((c) => c.AdminInicio)
+                    },
+                    {
+                        path: 'peliculas',
+                        loadComponent: () => import("./componentes/admin/admin-peliculas/admin-peliculas").then((c) => c.AdminPeliculas)
+                    }
+                ]
             }
         ]
     }

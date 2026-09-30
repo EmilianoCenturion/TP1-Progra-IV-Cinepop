@@ -1,0 +1,10 @@
+<div class="panel-admin">
+    <header class="encabezado-admin">
+        <button type="button" class="btn-volver" *ngIf="!estaEnInicio()" (click)="volver()">
+            ← Volver al panel
+        </button>
+        <h2>Panel de admin</h2>
+    </header>
+
+    <router-outlet></router-outlet>
+</div>

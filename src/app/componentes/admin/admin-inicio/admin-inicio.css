@@ -1,0 +1,49 @@
+.grilla-gestiones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta-gestion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 130px;
+  padding: 20px;
+  text-align: left;
+  border: 1px solid #3a3745;
+  border-radius: var(--radio-card);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.tarjeta-gestion:hover:not(:disabled) {
+  border-color: var(--color-acento-dorado);
+  transform: translateY(-2px);
+}
+
+.tarjeta-gestion:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tarjeta-gestion .titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 22px;
+}
+
+.tarjeta-gestion .descripcion {
+  font-family: var(--fuente-cuerpo);
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.tarjeta-gestion .proximamente {
+  margin-top: auto;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-acento-dorado);
+}

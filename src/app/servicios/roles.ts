@@ -16,9 +16,9 @@ export class Roles {
         .from('roles_usuarios')
         .select('rol_usuario')
         .eq('id', usuario.id)
-        .single();
+        .maybeSingle();
 
-        if (error != null) {
+        if (error != null || data == null) {
             return null
         }
 
