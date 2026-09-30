@@ -1,1 +1,132 @@
-<p>admin-peliculas works!</p>
+<div class="admin-peliculas">
+    <div class="barra">
+        <h3>Películas</h3>
+        <button type="button" class="btn-principal" (click)="nueva()" *ngIf="!mostrarForm()">+ Nueva película</button>
+    </div>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <!-- Formulario de alta / edición -->
+    <form class="form-pelicula" *ngIf="mostrarForm()" [formGroup]="form" (ngSubmit)="guardar()">
+        <h4>{{ editando() ? 'Editar "' + editando().nombre + '"' : 'Nueva película' }}</h4>
+
+        <div class="grilla">
+            <label class="ancho">Nombre
+                <input type="text" formControlName="nombre">
+            </label>
+
+            <label class="ancho">Sinopsis
+                <textarea rows="3" formControlName="sinopsis"></textarea>
+            </label>
+
+            <label class="ancho">URL de la imagen
+                <input type="text" formControlName="imagen_url" placeholder="https://...">
+            </label>
+
+            <label>Duración (min)
+                <input type="number" formControlName="duracion" min="1">
+            </label>
+
+            <label>Formato
+                <select formControlName="formato">
+                    <option *ngFor="let f of ['2D', '3D', '4D', '5D']" [ngValue]="f">{{ f }}</option>
+                </select>
+            </label>
+
+            <label>Idioma
+                <select formControlName="idioma">
+                    <option [ngValue]="'Castellano'">Castellano</option>
+                    <option [ngValue]="'Subtitulada'">Subtitulada</option>
+                </select>
+            </label>
+
+            <label>Clasificación
+                <select formControlName="clasificacion_edad">
+                    <option [ngValue]="0">ATP</option>
+                    <option [ngValue]="13">+13</option>
+                    <option [ngValue]="18">+18</option>
+                </select>
+            </label>
+
+            <label>Precio normal
+                <input type="number" formControlName="precio_normal" min="1">
+            </label>
+
+            <label>Precio preventa
+                <input type="number" formControlName="precio_preventa" min="1">
+            </label>
+
+            <div class="ancho">
+                <span class="etiqueta">Fecha de estreno</span>
+                <div class="fecha-selects">
+                    <select formControlName="diaEstreno" aria-label="Día">
+                        <option [ngValue]="null" disabled>Día</option>
+                        <option *ngFor="let d of dias" [ngValue]="d">{{ d }}</option>
+                    </select>
+                    <select formControlName="mesEstreno" aria-label="Mes">
+                        <option [ngValue]="null" disabled>Mes</option>
+                        <option *ngFor="let m of meses; let i = index" [ngValue]="i + 1">{{ m }}</option>
+                    </select>
+                    <select formControlName="anioEstreno" aria-label="Año">
+                        <option [ngValue]="null" disabled>Año</option>
+                        <option *ngFor="let a of anios" [ngValue]="a">{{ a }}</option>
+                    </select>
+                </div>
+                <p class="error" *ngIf="form.hasError('fechaInvalida')">Esa fecha no existe.</p>
+            </div>
+
+            <div class="ancho">
+                <span class="etiqueta">Géneros</span>
+                <div class="chips">
+                    <button type="button" class="chip" *ngFor="let g of generos()"
+                        [class.activo]="generoElegido(g.id)" (click)="toggleGenero(g.id)">
+                        {{ g.nombre }}
+                    </button>
+                </div>
+                <p class="error" *ngIf="form.get('generos')?.touched && form.get('generos')?.invalid">Elegí al menos un género.</p>
+            </div>
+        </div>
+
+        <div class="acciones">
+            <button type="button" class="btn-secundario" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="btn-principal" [disabled]="guardando()">
+                {{ guardando() ? 'Guardando...' : 'Guardar' }}
+            </button>
+        </div>
+    </form>
+
+    <!-- Listado -->
+    <table class="tabla" *ngIf="!mostrarForm()">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Película</th>
+                <th>Formato</th>
+                <th>Edad</th>
+                <th>Precio / Preventa</th>
+                <th>Estreno</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of peliculas()" [class.oculta]="!p.activa">
+                <td><img [src]="p.imagen_url" [alt]="p.nombre"></td>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.formato }} · {{ p.idioma }}</td>
+                <td>{{ p.clasificacion_edad ? '+' + p.clasificacion_edad : 'ATP' }}</td>
+                <td>${{ p.precio_normal }} / ${{ p.precio_preventa }}</td>
+                <td>{{ p.fecha_estreno | date:'dd/MM/yyyy' }}</td>
+                <td>
+                    <span class="estado" [class.activa]="p.activa">{{ p.activa ? 'Publicada' : 'Oculta' }}</span>
+                </td>
+                <td class="acciones-fila">
+                    <button type="button" (click)="editar(p)">Editar</button>
+                    <button type="button" (click)="cambiarActiva(p)">{{ p.activa ? 'Ocultar' : 'Publicar' }}</button>
+                    <button type="button" class="btn-eliminar" (click)="eliminar(p)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

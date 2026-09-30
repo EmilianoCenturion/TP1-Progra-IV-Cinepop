@@ -1,5 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { Auth } from './auth';
+import { AuthWeakPasswordError } from '@supabase/supabase-js';
 
 @Service()
 export class Peliculas {
@@ -24,7 +25,8 @@ export class Peliculas {
         const { data, error } = await this.cliente.client()
         .from('peliculas')
         .select('*, peliculas_generos(genero_id, generos(nombre)), resenas(calificacion)')
-        
+        .eq('activa', true)
+
         if (error != null) {
             console.log(error);
             
@@ -67,6 +69,7 @@ export class Peliculas {
         const { data, error } = await this.cliente.client()
         .from('peliculas')
         .select('*, peliculas_generos(genero_id, generos(nombre)), resenas(calificacion), funciones(entradas(id, compra_id, compras(cancelada)))')
+        .eq('activa', true)
 
         if (error != null) {
             console.log(error);
@@ -76,7 +79,7 @@ export class Peliculas {
         data.forEach(pelicula => {
             pelicula.cantidadVendida = this.contarEntradasVendidas(pelicula);
 
-            this.calcularPromedio(pelicula.resenas);
+            pelicula.promedio = this.calcularPromedio(pelicula.resenas);
         });
 
         data.sort((a, b) => b.cantidadVendida - a.cantidadVendida);
@@ -109,5 +112,129 @@ export class Peliculas {
         }
 
         return data;
+    }
+
+    async getPeliculasAdmin() {
+        const { data, error } = await this.cliente.client()
+        .from('peliculas')
+        .select('*, peliculas_generos(genero_id, generos(nombre))')
+        .order('nombre', { ascending: true } );
+
+        if (error != null) {
+            console.log(error);
+            return [];
+        }
+
+        return data;
+    }
+
+    async crearPelicula(datos: any, generosIds: number[]) {
+        const { data, error } = await this.cliente.client()
+        .from('peliculas')
+        .insert(datos)
+        .select()
+        .single();
+
+        if (error != null) {
+            console.log(error);
+            return null; 
+        }
+
+        const okGeneros = await this.guardarGeneros(data.id, generosIds);
+
+        return okGeneros ? data : null;
+    }
+
+    async actualizarPelicula(id: number, datos: any, generosIds: number[]) {
+        const { error } = await this.cliente.client()
+        .from('peliculas')
+        .update(datos)
+        .eq('id', id)
+
+        if (error != null) {
+            console.log();
+            return false;
+        }
+
+        return await this.guardarGeneros(id, generosIds);
+    }
+
+    async cambiarActiva(id: number, activa:boolean) {
+        const { error } = await this.cliente.client()
+        .from('peliculas')
+        .update({ activa })
+        .eq('id', id)
+
+        if (error != null) {
+            console.log(error);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Reemplaza los generos: borra los que tenia y guarda los elegidos
+    private async guardarGeneros(peliculaId: number, generosIds: number[]) {
+        const { error: errorBorrar } = await this.cliente.client()
+        .from('peliculas_generos')
+        .delete()
+        .eq('pelicula_id', peliculaId)
+
+        if (errorBorrar != null) {
+            console.log(errorBorrar);
+            return false;
+        }
+
+        const { error } = await this.cliente.client()
+        .from('peliculas_generos')
+        .insert(generosIds.map(generoId => ({ pelicula_id: 
+            peliculaId, genero_id: generoId })));
+
+        if (error != null) {
+            console.log(error);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Solo se puede eliminar si no tiene funciones ni reseñas (no se pierde historial)
+    async puedeEliminar(id: number) {
+        const { count: funciones } = await this.cliente.client()
+        .from('funciones')
+        .select('id', { count: 'exact', head: true })
+        .eq('pelicula_id', id);
+
+        const { count: resenas } = await this.cliente.client()
+        .from('resenas')
+        .select('id', { count: 'exact', head: true })
+        .eq('pelicula_id', id);
+
+        return funciones === 0 && resenas === 0;
+    }
+
+    async eliminarPelicula(id: number) {
+        // Primero la tabla intermedia, si no la base no deja borrar la película
+        const { error: errorGeneros } = await this.cliente.client()
+        .from('peliculas_generos')
+        .delete()
+        .eq('pelicula_id', id);
+
+        if (errorGeneros != null) {
+            console.log(errorGeneros);
+            return false;
+        }
+
+        const { error } = await this.cliente.client()
+        .from('peliculas')
+        .delete()
+        .eq('id', id);
+
+        if (error != null) {
+            console.log(error);
+            return false;
+        }
+
+        return true;
     }
 }
