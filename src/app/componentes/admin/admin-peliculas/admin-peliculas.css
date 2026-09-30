@@ -10,122 +10,8 @@
   font-size: 24px;
 }
 
-.btn-principal {
-  padding: 10px 18px;
-  border: none;
-  border-radius: var(--radio-elemento);
-  background-color: var(--color-acento-rojo);
-  color: var(--color-texto);
-  font-family: var(--fuente-titulo);
-  cursor: pointer;
-}
-
-.btn-principal:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secundario {
-  padding: 10px 18px;
-  border: 1px solid var(--color-texto-secundario);
-  border-radius: var(--radio-elemento);
-  background: transparent;
-  color: var(--color-texto);
-  cursor: pointer;
-}
-
 .ok {
   color: #4caf7d;
-}
-
-.error {
-  color: #ff6b6b;
-  font-size: 13px;
-  margin: 4px 0 0;
-}
-
-/* Formulario */
-.form-pelicula {
-  padding: 24px;
-  border-radius: var(--radio-card);
-  background-color: var(--color-superficie);
-}
-
-.form-pelicula h4 {
-  margin: 0 0 16px;
-  font-family: var(--fuente-titulo);
-  font-size: 20px;
-}
-
-.grilla {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px 16px;
-}
-
-.grilla .ancho {
-  grid-column: 1 / -1;
-}
-
-.grilla label,
-.etiqueta {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--color-texto-secundario);
-}
-
-.grilla input,
-.grilla select,
-.grilla textarea {
-  padding: 10px 12px;
-  border-radius: var(--radio-elemento);
-  border: 1px solid var(--color-texto-secundario);
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
-  font-family: var(--fuente-cuerpo);
-}
-
-/* Angular agrega estas clases solo: campo inválido que el usuario ya tocó */
-.grilla .ng-invalid.ng-touched {
-  border-color: #ff6b6b;
-}
-
-.fecha-selects {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1.3fr;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.chip {
-  padding: 4px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--color-texto-secundario);
-  background: transparent;
-  color: var(--color-texto-secundario);
-  cursor: pointer;
-}
-
-.chip.activo {
-  border-color: var(--color-acento-rojo);
-  background-color: var(--color-acento-rojo);
-  color: var(--color-texto);
-}
-
-.acciones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
 }
 
 /* Tabla */
@@ -152,7 +38,7 @@
 }
 
 .tabla img {
-  width: 40px;
+  width: 70px;
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 4px;
@@ -191,4 +77,25 @@
 
 .acciones-fila button:hover {
   border-color: var(--color-acento-dorado);
+}
+
+.btn-principal {
+  padding: 10px 18px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  cursor: pointer;
+}
+
+.btn-principal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin: 4px 0 0;
 }

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
 import { rolGuard } from './guards/rol-guard';
+import { cambiosSinGuardarGuard } from './guards/cambios-sin-guardar-guard';
 
 export const routes: Routes = [
     {
@@ -51,7 +52,17 @@ export const routes: Routes = [
                     {
                         path: 'peliculas',
                         loadComponent: () => import("./componentes/admin/admin-peliculas/admin-peliculas").then((c) => c.AdminPeliculas)
-                    }
+                    },
+                    {
+                        path: 'peliculas/nueva',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-pelicula-form/admin-pelicula-form").then((c) => c.AdminPeliculaForm)
+                    },
+                    {
+                        path: 'peliculas/:id/editar',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-pelicula-form/admin-pelicula-form").then((c) => c.AdminPeliculaForm)
+                    },
                 ]
             }
         ]

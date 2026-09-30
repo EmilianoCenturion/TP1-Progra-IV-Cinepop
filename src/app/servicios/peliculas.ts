@@ -237,4 +237,19 @@ export class Peliculas {
 
         return true;
     }
+
+    async getPeliculaAdmin(id: number) {
+        const { data, error } = await this.cliente.client()
+        .from('peliculas')
+        .select('*, peliculas_generos(genero_id)')
+        .eq('id', id)
+        .maybeSingle()
+
+        if (error != null) {
+            console.log(error);
+            return null;
+        }
+
+        return data;
+    }
 }
