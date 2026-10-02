@@ -1,0 +1,100 @@
+.admin-salas h3 {
+  margin: 0 0 16px;
+  font-size: 24px;
+}
+
+.form-sala {
+  display: flex;
+  gap: 10px;
+  max-width: 560px;
+}
+
+.form-sala input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+}
+
+.form-sala input.ng-invalid.ng-touched {
+  border-color: #ff6b6b;
+}
+
+.btn-principal {
+  padding: 10px 18px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  cursor: pointer;
+}
+
+.btn-principal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ayuda {
+  margin: 8px 0 16px;
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.ok {
+  color: #4caf7d;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.grilla-salas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta-sala {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border-radius: var(--radio-card);
+  border: 1px solid #3a3745;
+  background-color: var(--color-superficie);
+}
+
+.tarjeta-sala .nombre {
+  font-family: var(--fuente-titulo);
+  font-size: 22px;
+}
+
+.tarjeta-sala .dato {
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.btn-eliminar {
+  margin-top: 8px;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border: 1px solid var(--color-texto-secundario);
+  border-radius: var(--radio-elemento);
+  background: transparent;
+  color: var(--color-texto);
+  cursor: pointer;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.btn-eliminar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

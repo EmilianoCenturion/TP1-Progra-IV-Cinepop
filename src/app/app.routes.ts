@@ -63,6 +63,11 @@ export const routes: Routes = [
                         canDeactivate: [cambiosSinGuardarGuard],
                         loadComponent: () => import("./componentes/admin/admin-pelicula-form/admin-pelicula-form").then((c) => c.AdminPeliculaForm)
                     },
+                    {
+                        path: 'salas',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-salas/admin-salas").then((c) => c.AdminSalas)
+                    }
                 ]
             }
         ]

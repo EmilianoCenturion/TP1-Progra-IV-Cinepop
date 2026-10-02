@@ -1,0 +1,27 @@
+<div class="admin-salas">
+    <h3>Salas</h3>
+
+    <form class="form-sala" [formGroup]="form" (ngSubmit)="crear()">
+        <input type="text" formControlName="nombre" placeholder="Nombre de la nueva sala (ej: Sala 2)">
+        <button type="submit" class="btn-principal" [disabled]="creando()">
+            {{ creando() ? 'Creando...' : '+ Crear sala' }}
+        </button>
+    </form>
+    <p class="ayuda">Se generan automáticamente 518 butacas: 15 filas normales, fila J accesible (2-10-2) y filas R, S y T VIP.</p>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <div class="grilla-salas">
+        <div class="tarjeta-sala" *ngFor="let s of salas()">
+            <span class="nombre">{{ s.nombre }}</span>
+            <span class="dato">{{ s.butacas[0].count }} butacas</span>
+            <span class="dato">{{ s.funciones[0].count }} funciones</span>
+
+            <button type="button" class="btn-eliminar" (click)="eliminar(s)" [disabled]="s.funciones[0].count > 0"
+                [title]="s.funciones[0].count > 0 ? 'Tiene funciones: no se puede eliminar' : ''">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
