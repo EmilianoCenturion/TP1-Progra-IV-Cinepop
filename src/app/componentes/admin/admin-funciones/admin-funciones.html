@@ -1,0 +1,118 @@
+<div class="admin-funciones">
+    <h3>Funciones</h3>
+
+    <form class="form-funciones" [formGroup]="form" (ngSubmit)="verFunciones()" (change)="limpiarPlan()">
+        <div class="grilla">
+            <label class="ancho">Película
+                <select formControlName="peliculaId">
+                    <option [ngValue]="null" disabled>Elegí una película</option>
+                    <option *ngFor="let p of peliculas()" [ngValue]="p.id">{{ p.nombre }} ({{ p.duracion }} min)</option>
+                </select>
+            </label>
+
+            <div class="ancho">
+                <span class="etiqueta">Días de la semana</span>
+                <div class="chips">
+                    <button type="button" class="chip" *ngFor="let d of diasSemana"
+                        [class.activo]="diaElegido(d.valor)" (click)="toggleDia(d.valor)">
+                        {{ d.nombre }}
+                    </button>
+                </div>
+                <p class="error" *ngIf="form.get('diasElegidos')?.touched && form.get('diasElegidos')?.invalid">Elegí al menos un día.</p>
+            </div>
+
+            <div>
+                <span class="etiqueta">Hora</span>
+                <div class="fila-selects">
+                    <select formControlName="hora" aria-label="Hora">
+                        <option *ngFor="let h of horas" [ngValue]="h">{{ h }}</option>
+                    </select>
+                    <span>:</span>
+                    <select formControlName="minuto" aria-label="Minutos">
+                        <option *ngFor="let m of minutos" [ngValue]="m">{{ m === 0 ? '00' : m }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <span class="etiqueta">Desde</span>
+                <div class="fila-selects">
+                    <select formControlName="diaDesde" aria-label="Día">
+                        <option *ngFor="let d of dias" [ngValue]="d">{{ d }}</option>
+                    </select>
+                    <select formControlName="mesDesde" aria-label="Mes">
+                        <option *ngFor="let m of meses; let i = index" [ngValue]="i + 1">{{ m }}</option>
+                    </select>
+                    <select formControlName="anioDesde" aria-label="Año">
+                        <option *ngFor="let a of anios" [ngValue]="a">{{ a }}</option>
+                    </select>
+                </div>
+                <p class="error" *ngIf="form.hasError('fechaInvalida')">Esa fecha no existe.</p>
+            </div>
+
+            <label>Durante
+                <select formControlName="semanas">
+                    <option *ngFor="let s of opcionesSemanas" [ngValue]="s">{{ s }} {{ s === 1 ? 'semana' : 'semanas' }}</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="acciones">
+            <button type="submit" class="btn-secundario" [disabled]="trabajando()">Ver funciones</button>
+        </div>
+    </form>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <!-- Vista previa -->
+    <section class="vista-previa" *ngIf="plan().length > 0 || sinSala().length > 0">
+        <h4>Se van a crear {{ plan().length }} funciones</h4>
+
+        <ul>
+            <li *ngFor="let p of plan()">
+                <span>{{ p.fecha | date:'EEE dd/MM HH:mm' }}</span>
+                <span class="sala">{{ p.salaNombre }}</span>
+            </li>
+        </ul>
+
+        <div class="sin-sala" *ngIf="sinSala().length > 0">
+            <strong>Sin sala disponible ({{ sinSala().length }}):</strong>
+            <span *ngFor="let f of sinSala()">{{ f | date:'EEE dd/MM HH:mm' }}</span>
+        </div>
+
+        <div class="acciones">
+            <button type="button" class="btn-secundario" (click)="limpiarPlan()">Descartar</button>
+            <button type="button" class="btn-principal" (click)="confirmar()" [disabled]="plan().length === 0 || trabajando()">
+                {{ trabajando() ? 'Guardando...' : 'Confirmar' }}
+            </button>
+        </div>
+    </section>
+
+    <!-- Próximas funciones -->
+    <h4>Próximas funciones</h4>
+    <p class="vacio" *ngIf="proximas().length === 0">No hay funciones programadas.</p>
+
+    <table class="tabla" *ngIf="proximas().length > 0">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Película</th>
+                <th>Sala</th>
+                <th>Vendidas</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let f of proximas()">
+                <td>{{ f.fecha_hora | date:'EEE dd/MM HH:mm' }}</td>
+                <td>{{ f.peliculas.nombre }}</td>
+                <td>{{ f.salas.nombre }}</td>
+                <td>{{ f.entradas[0].count }}</td>
+                <td>
+                    <button type="button" class="btn-eliminar" (click)="eliminar(f)" [disabled]="f.entradas[0].count > 0">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
