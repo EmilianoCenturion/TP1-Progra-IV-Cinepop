@@ -1,0 +1,56 @@
+<div class="admin-candy">
+    <h3>Candy</h3>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <!-- Categorías -->
+    <section class="bloque">
+        <h4>Categorías</h4>
+
+        <div class="lista-categorias">
+            <span class="categoria" *ngFor="let c of categorias()">
+                {{ c.nombre }} <small>({{ c.productos_candy[0].count }})</small>
+                <button type="button" class="quitar" (click)="eliminarCategoria(c)"
+                    [disabled]="c.productos_candy[0].count > 0" aria-label="Eliminar categoría">×</button>
+            </span>
+        </div>
+
+        <form class="form-categoria" [formGroup]="formCategoria" (ngSubmit)="crearCategoria()">
+            <input type="text" formControlName="nombre" placeholder="Nueva categoría">
+            <button type="submit" class="btn-secundario">Agregar</button>
+        </form>
+    </section>
+
+    <!-- Productos -->
+    <section class="bloque">
+        <div class="barra">
+            <h4>Productos</h4>
+            <button type="button" class="btn-principal" (click)="nuevoProducto()">+ Nuevo producto</button>
+        </div>
+
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of productos()">
+                    <td><img [src]="p.imagen_ruta" [alt]="p.nombre"></td>
+                    <td>{{ p.nombre }}</td>
+                    <td>{{ p.categorias_candy.nombre }}</td>
+                    <td>${{ p.precio }}</td>
+                    <td class="acciones-fila">
+                        <button type="button" (click)="editarProducto(p)">Editar</button>
+                        <button type="button" class="btn-eliminar" (click)="eliminarProducto(p)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>

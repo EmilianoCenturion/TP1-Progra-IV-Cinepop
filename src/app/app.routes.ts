@@ -72,6 +72,20 @@ export const routes: Routes = [
                         path: 'funciones',
                         canDeactivate: [cambiosSinGuardarGuard],
                         loadComponent: () => import("./componentes/admin/admin-funciones/admin-funciones").then((c) => c.AdminFunciones)
+                    },
+                    {
+                        path: 'candy',
+                        loadComponent: () => import("./componentes/admin/admin-candy/admin-candy").then((c) => c.AdminCandy)
+                    },
+                    {
+                        path: 'candy/productos/nuevo',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-producto-form/admin-producto-form").then((c) => c.AdminProductoForm)
+                    },
+                    {
+                        path: 'candy/productos/:id/editar',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-producto-form/admin-producto-form").then((c) => c.AdminProductoForm)
                     }
                 ]
             }

@@ -1,0 +1,44 @@
+<p>admin-producto-form works!</p>
+<p *ngIf="cargando()">Cargando...</p>
+
+<form class="form-producto" *ngIf="!cargando()" [formGroup]="form" (ngSubmit)="guardar()">
+    <h3>{{ editando() ? 'Editar "' + editando().nombre + '"' : 'Nuevo producto' }}</h3>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <div class="contenido">
+        <!-- Vista previa de la URL que se escribe a la derecha -->
+        <div class="imagen">
+            <img *ngIf="form.value.imagen_ruta" [src]="form.value.imagen_ruta" alt="Vista previa">
+            <div class="sin-imagen" *ngIf="!form.value.imagen_ruta">Sin imagen</div>
+        </div>
+
+        <div class="campos">
+            <label>Nombre
+                <input type="text" formControlName="nombre">
+            </label>
+
+            <label>Precio
+                <input type="number" formControlName="precio" min="1">
+            </label>
+
+            <label>Categoría
+                <select formControlName="categoria_id">
+                    <option [ngValue]="null" disabled>Elegí una categoría</option>
+                    <option *ngFor="let c of categorias()" [ngValue]="c.id">{{ c.nombre }}</option>
+                </select>
+            </label>
+
+            <label>URL de la imagen
+                <input type="text" formControlName="imagen_ruta" placeholder="https://...">
+            </label>
+        </div>
+    </div>
+
+    <div class="acciones">
+        <button type="button" class="btn-secundario" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn-principal" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+    </div>
+</form>
