@@ -13,7 +13,19 @@
           <strong *ngIf="b.tipo_butaca === 'VIP'">VIP</strong>
           <strong *ngIf="b.tipo_butaca === 'Accesible'">Accesible</strong>
         </span>
-        <span>${{ b.precio }}</span>
+        <span *ngIf="!combo()">${{ b.precio }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="bloque" *ngIf="combo() as c">
+    <h3>Combo</h3>
+    <ul>
+      <li>
+        <span>{{ c.nombre }}: {{ c.cantidad_entradas }} {{ c.cantidad_entradas === 1 ? 'entrada' : 'entradas' }}
+          <ng-container *ngFor="let cp of c.combos_productos"> + {{ cp.cantidad }} {{ cp.productos_candy.nombre }}</ng-container>
+        </span>
+        <span>${{ c.precio }}</span>
       </li>
     </ul>
   </section>

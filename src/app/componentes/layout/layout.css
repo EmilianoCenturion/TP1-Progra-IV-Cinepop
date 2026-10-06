@@ -1,0 +1,25 @@
+.aviso-combo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  background-color: rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--color-acento-dorado);
+  font-size: 14px;
+}
+
+.aviso-combo button {
+  padding: 6px 12px;
+  border: 1px solid var(--color-texto-secundario);
+  border-radius: var(--radio-elemento);
+  background: transparent;
+  color: var(--color-texto);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.aviso-combo button:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}

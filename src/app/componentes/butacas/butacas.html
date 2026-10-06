@@ -35,13 +35,23 @@
       <ul *ngIf="butacaSeleccionada().length > 0; else sinSeleccion">
         <li *ngFor="let b of butacaSeleccionada()" [class.vip]="b.tipo_butaca === 'VIP'" [class.accesible]="b.tipo_butaca === 'Accesible'">
           <span class="item-butaca">Fila {{ b.fila }}, Butaca {{ b.numero }}</span>
-          <span class="item-precio">${{ b.precio }}</span>
+          <span class="item-precio" *ngIf="!reserva.combo()">${{ b.precio }}</span>
         </li>
       </ul>
 
-      <div class="panel-total" *ngIf="butacaSeleccionada().length > 0">
+      <div class="panel-total" *ngIf="butacaSeleccionada().length > 0 && !reserva.combo()">
         <span>Total</span> <span>${{ total() }}</span>
       </div>
+
+      <ng-container *ngIf="reserva.combo() as combo">
+        <p class="panel-combo">
+          {{ combo.nombre }}: {{ butacaSeleccionada().length }} de {{ combo.cantidad_entradas }} butacas elegidas
+        </p>
+        <div class="panel-total">
+          <span>Total del combo</span> <span>${{ combo.precio }}</span>
+        </div>
+        <p class="aviso-combo" *ngIf="avisoCombo()">{{ avisoCombo() }}</p>
+      </ng-container>
     </aside>
 
     <div class="leyenda">
@@ -55,8 +65,8 @@
     <button
       type="button"
       class="btn-continuar"
-      [hidden]="butacaSeleccionada().length === 0"
-      (click)="irACandy()">
+      [hidden]="!puedeContinuar()"
+      (click)="continuar()">
       Continuar
     </button>
   </div>

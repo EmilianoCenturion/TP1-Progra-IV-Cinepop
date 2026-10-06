@@ -20,12 +20,14 @@ export class Butacas implements OnInit {
 
   butacaSeleccionada = signal<any[]>([]);
 
+  avisoCombo = signal("");
+
   constructor(private butacaService: Butaca,
     private route: ActivatedRoute,
     private location: Location,
     private funciones: Funciones,
     private router: Router,
-    private reserva: Reserva) {}
+    public reserva: Reserva) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
@@ -107,9 +109,18 @@ export class Butacas implements OnInit {
     }
 
     if (!encontrado) {
+      const combo = this.reserva.combo();
+
+      // Con combo no se pueden elegir más butacas que las entradas que incluye
+      if (combo && nuevaLista.length >= combo.cantidad_entradas) {
+        this.avisoCombo.set(`El combo incluye ${combo.cantidad_entradas} entradas: deseleccioná una para elegir otra.`);
+        return;
+      }
+
       nuevaLista.push(butaca)
     }
 
+    this.avisoCombo.set('');
     this.butacaSeleccionada.set(nuevaLista);
   }
 
@@ -128,9 +139,28 @@ export class Butacas implements OnInit {
     return suma;
   }
 
-  irACandy() {
+  // Con combo hay que elegir exactamente las entradas que incluye
+  puedeContinuar() {
+    const combo = this.reserva.combo();
+
+    if (combo) {
+      return this.butacaSeleccionada().length === combo.cantidad_entradas;
+    }
+
+    return this.butacaSeleccionada().length > 0;
+  }
+
+  continuar() {
     this.reserva.setFuncionId(this.funcion().id);
     this.reserva.setButacas(this.butacaSeleccionada());
+
+    // El combo ya trae el candy: va directo al checkout
+    if (this.reserva.combo()) {
+      this.reserva.setCarrito([]);
+      this.router.navigate(['/funcion', this.funcion().id, 'checkout']);
+      return;
+    }
+
     this.router.navigate(['/funcion', this.funcion().id, 'candy'])
   }
 }

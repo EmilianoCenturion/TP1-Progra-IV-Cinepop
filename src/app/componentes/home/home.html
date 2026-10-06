@@ -10,6 +10,20 @@
         
     </section>
 
+    <section *ngIf="combos().length > 0">
+        <h2>Combos</h2>
+
+        <ul class="lista-combos">
+            <li class="combo" *ngFor="let c of combos()">
+                <img class="combo-imagen" [src]="c.imagen_ruta" [alt]="c.nombre">
+                <h3>{{ c.nombre }}</h3>
+                <p class="combo-detalle">{{ c.cantidad_entradas }} {{ c.cantidad_entradas === 1 ? 'entrada' : 'entradas' }} + {{ productosDelCombo(c) }}</p>
+                <p class="combo-precio">${{ c.precio }}</p>
+                <button type="button" class="btn-combo" (click)="elegirCombo(c)">Elegir combo</button>
+            </li>
+        </ul>
+    </section>
+
     <section>
         <h2>Reseñas recientes</h2>
 

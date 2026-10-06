@@ -11,10 +11,13 @@ export class Compra {
         carritoCandy: any[],
         metodoPago: string,
         total: number,
-        cuponId: number | null
+        cuponId: number | null,
+        combo: any
     ) {
         const user = await this.cliente.getUser();
-        const usuarioId = user?.id ?? null;
+        // Solo los clientes tienen fila en "usuarios": un admin o un anónimo compran sin usuario_id
+        const perfil = await this.cliente.getPerfil();
+        const usuarioId = perfil?.id ?? null;
         const email = user?.email ?? localStorage.getItem('emailAnon')
 
         const { data: compra, error: errorCompra } = await this.cliente.client()
@@ -66,6 +69,18 @@ export class Compra {
 
             if (errorItems != null) {
                 console.log(errorItems);
+                return null;
+            }
+        }
+
+        // El combo se guarda como un ítem más, con su precio congelado
+        if (combo != null) {
+            const { error: errorCombo } = await this.cliente.client()
+            .from('compra_items')
+            .insert({ compra_id: compra.id, combo_id: combo.id, cantidad: 1, precio_unitario: combo.precio })
+
+            if (errorCombo != null) {
+                console.log(errorCombo);
                 return null;
             }
         }

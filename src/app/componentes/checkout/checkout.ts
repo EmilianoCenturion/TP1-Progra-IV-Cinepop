@@ -27,7 +27,8 @@ export class Checkout {
 
   butacas = this.reservaService.butacasSeleccionadas;
   carritoCandy = this.reservaService.carritoCandy;
-  
+  combo = this.reservaService.combo;
+
   cuponAplicado = signal<any>(null);
   errorCupon = signal('');
   codigoCupon = '';
@@ -93,8 +94,26 @@ export class Checkout {
     return suma;
   }
 
+  // Con combo, las entradas y su candy ya están en el precio del combo
   subtotal() {
+    const combo = this.combo();
+
+    if (combo) {
+      return combo.precio + this.totalCandy();
+    }
+
     return this.totalButacas() + this.totalCandy();
+  }
+
+  // Productos del combo con la misma forma que el carrito: { producto: { nombre }, cantidad }
+  itemsDelCombo() {
+    const items = [];
+
+    for (let cp of this.combo().combos_productos) {
+      items.push({ producto: { nombre: cp.productos_candy.nombre }, cantidad: cp.cantidad });
+    }
+
+    return items;
   }
 
   descuento () {
@@ -166,7 +185,8 @@ export class Checkout {
       this.carritoCandy(),
       this.metodoPago,
       this.total(),
-      this.cuponAplicado()?.id ?? null
+      this.cuponAplicado()?.id ?? null,
+      this.combo()
     );
 
     this.procesando.set(false);
@@ -178,8 +198,9 @@ export class Checkout {
 
     this.resultado.set(resultado);
 
-    // antes de limpiar la reserva guardamos butacas y candy para armar el PDF
-    this.resumen.set({ butacas: this.butacas(), candy: this.carritoCandy() });
+    // Con combo, en el PDF se listan los productos que incluye
+    const candy = this.combo() ? this.itemsDelCombo() : this.carritoCandy();
+    this.resumen.set({ butacas: this.butacas(), candy });
     
     this.reservaService.limpiar()
   }

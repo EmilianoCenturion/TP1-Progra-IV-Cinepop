@@ -264,3 +264,17 @@
 .btn-continuar:hover {
   filter: brightness(1.1);
 }
+
+/* Compra con combo */
+
+.panel-combo {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.aviso-combo {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #ff6b6b;
+}

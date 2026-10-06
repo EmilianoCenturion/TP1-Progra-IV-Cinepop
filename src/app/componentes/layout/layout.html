@@ -1,5 +1,14 @@
 <app-nav></app-nav>
 
+<!-- Aviso mientras se compra un combo: se ve en cartelera, película y butacas -->
+<div class="aviso-combo" *ngIf="reserva.combo() as combo">
+    <span>
+        Estás comprando el <strong>{{ combo.nombre }}</strong>:
+        elegí película, función y {{ combo.cantidad_entradas }} {{ combo.cantidad_entradas === 1 ? 'butaca' : 'butacas' }}.
+    </span>
+    <button type="button" (click)="cancelarCombo()">Cancelar combo</button>
+</div>
+
 <main>
     <router-outlet></router-outlet>
 </main>
