@@ -1,0 +1,85 @@
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.barra h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.barra select {
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+}
+
+.ayuda,
+.vacio {
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+/* Resumen */
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 16px 0 32px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  border-radius: var(--radio-card);
+  background-color: var(--color-superficie);
+}
+
+.dato .valor {
+  font-family: var(--fuente-titulo);
+  font-size: 28px;
+  color: var(--color-acento-dorado);
+}
+
+.dato .etiqueta {
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+/* Tablas */
+.bloque {
+  margin-bottom: 32px;
+}
+
+.bloque h4 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.tabla {
+  width: 100%;
+  max-width: 760px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla th {
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--color-texto-secundario);
+  border-bottom: 1px solid #3a3745;
+}
+
+.tabla td {
+  padding: 8px;
+  border-bottom: 1px solid #2f2d38;
+}
