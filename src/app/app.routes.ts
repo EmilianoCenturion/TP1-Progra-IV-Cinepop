@@ -86,7 +86,30 @@ export const routes: Routes = [
                         path: 'candy/productos/:id/editar',
                         canDeactivate: [cambiosSinGuardarGuard],
                         loadComponent: () => import("./componentes/admin/admin-producto-form/admin-producto-form").then((c) => c.AdminProductoForm)
-                    }
+                    },
+                    {
+                        path: 'candy/combos/nuevo',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-combo-form/admin-combo-form").then((c) => c.AdminComboForm)
+                    },
+                    {
+                        path: 'candy/combos/:id/editar',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-combo-form/admin-combo-form").then((c) => c.AdminComboForm)
+                    },        
+                    {
+                        path: 'reportes',
+                        loadComponent: () => import("./componentes/admin/admin-reportes/admin-reportes").then((c) => c.AdminReportes)
+                    },
+                    {
+                        path: 'actividad',
+                        loadComponent: () => import("./componentes/admin/admin-actividad/admin-actividad").then((c) => c.AdminActividad)
+                    },
+                    {
+                        path: 'cupones',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-cupones/admin-cupones").then((c) => c.AdminCupones)
+                    },
                 ]
             }
         ]
