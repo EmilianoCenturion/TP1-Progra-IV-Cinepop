@@ -1,0 +1,139 @@
+.admin-cupones h3 {
+  margin: 0 0 16px;
+  font-size: 24px;
+}
+
+.form-cupon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.form-cupon input,
+.form-cupon select,
+.editar-porcentaje input {
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+}
+
+.form-cupon input[formControlName="codigo"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-cupon .ng-invalid.ng-touched {
+  border-color: #ff6b6b;
+}
+
+.porcentaje,
+.editar-porcentaje {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.porcentaje input,
+.editar-porcentaje input {
+  width: 80px;
+}
+
+.ayuda {
+  margin: 8px 0 16px;
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.btn-principal {
+  padding: 10px 18px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  cursor: pointer;
+}
+
+.ok {
+  color: #4caf7d;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla th {
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--color-texto-secundario);
+  border-bottom: 1px solid #3a3745;
+}
+
+.tabla td {
+  padding: 8px;
+  border-bottom: 1px solid #2f2d38;
+  vertical-align: middle;
+}
+
+.tabla tr.inactivo td {
+  opacity: 0.6;
+}
+
+.codigo {
+  font-family: monospace;
+  font-size: 15px;
+}
+
+.estado {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background-color: #3a3745;
+  color: var(--color-texto-secundario);
+}
+
+.estado.activo {
+  background-color: rgba(76, 175, 125, 0.2);
+  color: #4caf7d;
+}
+
+.editar-porcentaje button,
+.acciones-fila button {
+  padding: 4px 10px;
+  border: 1px solid var(--color-texto-secundario);
+  border-radius: var(--radio-elemento);
+  background: transparent;
+  color: var(--color-texto);
+  cursor: pointer;
+}
+
+.acciones-fila {
+  white-space: nowrap;
+}
+
+.acciones-fila button {
+  margin-left: 6px;
+}
+
+.editar-porcentaje button:hover,
+.acciones-fila button:hover {
+  border-color: var(--color-acento-dorado);
+}
+
+.acciones-fila .btn-eliminar:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}

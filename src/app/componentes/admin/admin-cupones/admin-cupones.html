@@ -1,0 +1,64 @@
+<div class="admin-cupones">
+    <h3>Cupones</h3>
+
+    <form class="form-cupon" [formGroup]="form" (ngSubmit)="crear()">
+        <input type="text" formControlName="codigo" placeholder="Código (ej: BIENVENIDA)" aria-label="Código">
+
+        <select formControlName="tipo" aria-label="Tipo">
+            <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+        </select>
+
+        <input *ngIf="form.value.tipo === 'Otro'" type="text" formControlName="tipoOtro" placeholder="Nombre del tipo (ej: Estudiantes)" aria-label="Nombre del tipo">
+
+        <label class="porcentaje">
+            <input type="number" formControlName="porcentaje" min="1" max="100" aria-label="Porcentaje">
+            <span>%</span>
+        </label>
+
+        <button type="submit" class="btn-principal">+ Crear cupón</button>
+    </form>
+    <p class="ayuda">
+        El de <strong>Primera compra</strong> se aplica solo a los clientes que nunca compraron: puede haber uno solo activo.
+        <br>
+        El de <strong>Mayor de 50</strong> se ingresa con el código en el checkout.
+        <br>
+        Los de otro tipo los puede usar cualquiera que tenga el código.
+    </p>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Descuento</th>
+                <th>Usos</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of cupones()" [class.inactivo]="!c.estado">
+                <td class="codigo">{{ c.codigo_cupon }}</td>
+                <td>{{ c.tipo_cupon }}</td>
+                <td>
+                    <div class="editar-porcentaje">
+                        <input #pct type="number" min="1" max="100" [value]="c.porcentaje_descuento" aria-label="Porcentaje">
+                        <span>%</span>
+                        <button type="button" (click)="guardarPorcentaje(c, pct.value)">Guardar</button>
+                    </div>
+                </td>
+                <td>{{ c.compras[0].count }}</td>
+                <td>
+                    <span class="estado" [class.activo]="c.estado">{{ c.estado ? 'Activo' : 'Inactivo' }}</span>
+                </td>
+                <td class="acciones-fila">
+                    <button type="button" (click)="cambiarEstado(c)">{{ c.estado ? 'Desactivar' : 'Activar' }}</button>
+                    <button type="button" class="btn-eliminar" (click)="eliminar(c)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
