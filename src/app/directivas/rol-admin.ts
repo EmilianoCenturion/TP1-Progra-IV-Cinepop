@@ -22,6 +22,4 @@ export class RolAdmin {
       this.viewContainer.clear();
     }
   }
-
-
 }

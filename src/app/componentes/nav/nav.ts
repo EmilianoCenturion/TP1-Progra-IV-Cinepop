@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../servicios/auth';
 import { NgIf } from '@angular/common';
-import { RolAdmin } from '../../directivas/rol-admin';
 import { Reserva } from '../../servicios/reserva';
+import { RolAdmin } from '../../directivas/rol-admin';
 
 
 @Component({
