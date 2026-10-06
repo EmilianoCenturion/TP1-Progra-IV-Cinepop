@@ -95,6 +95,11 @@
 
   <p class="error" *ngIf="errorConfirmar()">No se pudo confirmar la compra. Probá de nuevo.</p>
 
+  <div class="error" *ngIf="butacaOcupada()">
+    <p>Una de las butacas que elegiste se acaba de vender. Elegí otras para seguir.</p>
+    <button type="button" class="btn-volver" (click)="volverAButacas()">Elegir otras butacas</button>
+  </div>
+
   <button type="button" class="btn-confirmar" (click)="confirmar()" [disabled]="!puedeConfirmar()">
     {{ procesando() ? 'Procesando...' : 'Confirmar compra' }}
   </button>

@@ -40,6 +40,7 @@ export class Checkout {
   confirmarEdad = false;
   metodoPago = 'Tarjeta';
   procesando = signal(false);
+  butacaOcupada = signal(false)
   resultado = signal<any>(null);
   errorConfirmar = signal(false);
 
@@ -196,6 +197,12 @@ export class Checkout {
       return;
     }
 
+    // Otra persona compró alguna de estas butacas mientras tanto
+    if (resultado === 'ocupada') {
+      this.butacaOcupada.set(true);
+      return;
+    }
+
     this.resultado.set(resultado);
 
     // Con combo, en el PDF se listan los productos que incluye
@@ -203,6 +210,11 @@ export class Checkout {
     this.resumen.set({ butacas: this.butacas(), candy });
     
     this.reservaService.limpiar()
+  }
+
+  // Vuelve a la sala para elegir butacas libres (la lista de ocupadas se recarga)
+  volverAButacas() {
+    this.router.navigate(['/funcion', this.reservaService.funcionId(), 'butacas']);
   }
 
   edadMinima(): number { 
@@ -219,7 +231,7 @@ export class Checkout {
   }
 
   puedeConfirmar(): boolean { 
-    if (this.procesando() || this.funcionPasada() || this.bloqueadaPorEdad()) {
+    if (this.procesando() || this.funcionPasada() || this.bloqueadaPorEdad() || this.butacaOcupada()) {
       return false;
     } 
 

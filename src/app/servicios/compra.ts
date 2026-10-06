@@ -52,6 +52,13 @@ export class Compra {
 
         if (errorEntradas != null) {
             console.log(errorEntradas);
+            await this.deshacerCompra(compra.id);
+
+            // 23505 = la regla "una sola entrada por butaca y función": alguien la compró antes
+            if (errorEntradas.code === '23505') {
+                return 'ocupada';
+            }
+
             return null;
         }
 
@@ -69,6 +76,7 @@ export class Compra {
 
             if (errorItems != null) {
                 console.log(errorItems);
+                await this.deshacerCompra(compra.id);
                 return null;
             }
         }
@@ -81,10 +89,18 @@ export class Compra {
 
             if (errorCombo != null) {
                 console.log(errorCombo);
+                await this.deshacerCompra(compra.id);
                 return null;
             }
         }
 
         return { compra, entradas };
+    }
+
+    // Si falla un paso después de crear la compra, se borra lo que quedó a medias
+    private async deshacerCompra(compraId: number) {
+        await this.cliente.client().from('compra_items').delete().eq('compra_id', compraId);
+        await this.cliente.client().from('entradas').delete().eq('compra_id', compraId);
+        await this.cliente.client().from('compras').delete().eq('id', compraId);
     }
 }
