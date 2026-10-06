@@ -1,0 +1,47 @@
+<div class="admin-actividad">
+    <div class="barra">
+        <h3>Actividad</h3>
+        <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+    </div>
+
+    <div class="filtros">
+        <input type="text" placeholder="Buscar en la descripción..." aria-label="Buscar"
+            [ngModel]="texto" (ngModelChange)="texto = $event; filtrar()">
+
+        <select aria-label="Usuario" [ngModel]="usuario" (ngModelChange)="usuario = $event; filtrar()">
+            <option value="">Todos los usuarios</option>
+            <option *ngFor="let u of usuarios()" [value]="u">{{ nombreUsuario(u) }}</option>
+        </select>
+
+        <select aria-label="Período" [ngModel]="periodo" (ngModelChange)="periodo = $event; filtrar()">
+            <option *ngFor="let p of periodos" [value]="p.valor">{{ p.nombre }}</option>
+        </select>
+
+        <button type="button" class="btn-secundario" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+
+    <p *ngIf="cargando()">Cargando...</p>
+
+    <ng-container *ngIf="!cargando()">
+        <p class="cantidad">{{ filtrados().length }} de {{ registros().length }} registros</p>
+
+        <p class="vacio" *ngIf="filtrados().length === 0">No hay actividad con esos filtros.</p>
+
+        <table class="tabla" *ngIf="filtrados().length > 0">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let r of filtrados()">
+                    <td class="fecha">{{ fechaLocal(r.fecha) | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td class="usuario">{{ nombreUsuario(r.usuario_email) }}</td>
+                    <td>{{ r.descripcion }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+</div>
