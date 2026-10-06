@@ -53,4 +53,45 @@
             </tbody>
         </table>
     </section>
+
+        <!-- Combos -->
+    <section class="bloque">
+        <div class="barra">
+            <h4>Combos</h4>
+            <button type="button" class="btn-principal" (click)="nuevoCombo()">+ Nuevo combo</button>
+        </div>
+
+        <p class="vacio" *ngIf="combos().length === 0">Todavía no hay combos.</p>
+
+        <table class="tabla" *ngIf="combos().length > 0">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Combo</th>
+                    <th>Entradas</th>
+                    <th>Productos</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let c of combos()" [class.inactivo]="!c.activo">
+                    <td><img [src]="c.imagen_ruta" [alt]="c.nombre"></td>
+                    <td>{{ c.nombre }}</td>
+                    <td>{{ c.cantidad_entradas }}</td>
+                    <td>{{ productosDelCombo(c) }}</td>
+                    <td>${{ c.precio }}</td>
+                    <td>
+                        <span class="estado" [class.activo]="c.activo">{{ c.activo ? 'Activo' : 'Inactivo' }}</span>
+                    </td>
+                    <td class="acciones-fila">
+                        <button type="button" (click)="editarCombo(c)">Editar</button>
+                        <button type="button" (click)="cambiarActivoCombo(c)">{{ c.activo ? 'Desactivar' : 'Activar' }}</button>
+                        <button type="button" class="btn-eliminar" (click)="eliminarCombo(c)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 </div>

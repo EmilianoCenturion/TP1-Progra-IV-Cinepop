@@ -19,6 +19,7 @@ export class AdminCandy implements OnInit {
 
   categorias = signal<any[]>([]);
   productos = signal<any[]>([]);
+  combos = signal<any[]>([]);
   mensaje = signal('');
   error = signal('');
 
@@ -39,6 +40,7 @@ export class AdminCandy implements OnInit {
   async cargar() {
     this.categorias.set(await this.candyService.getCategorias());
     this.productos.set(await this.candyService.getProductosAdmin());
+    this.combos.set(await this.candyService.getCombosAdmin());
   }
 
   async crearCategoria() {
@@ -116,6 +118,65 @@ export class AdminCandy implements OnInit {
     await this.actividad.registrar(`Eliminó el producto de candy "${p.nombre}"`);
     await this.cargar();
   }
+
+    // |----- Combos
+
+  nuevoCombo() {
+    this.router.navigate(['/admin/candy/combos/nuevo']);
+  }
+
+  editarCombo(c: any) {
+    this.router.navigate(['/admin/candy/combos', c.id, 'editar']);
+  }
+
+  // "1 Pochoclo grande, 2 Gaseosa" para mostrar en la tabla
+  productosDelCombo(c: any) {
+    const partes: string[] = [];
+
+    for (let cp of c.combos_productos) {
+      partes.push(`${cp.cantidad} ${cp.productos_candy.nombre}`);
+    }
+
+    return partes.join(', ');
+  }
+
+  async cambiarActivoCombo(c: any) {
+    this.limpiarMensajes();
+
+    const ok = await this.candyService.cambiarActivoCombo(c.id, !c.activo);
+
+    if (!ok) {
+      this.error.set('No se pudo cambiar el estado del combo.');
+      return;
+    }
+
+    await this.actividad.registrar(`${c.activo ? 'Desactivó' : 'Activó'} el combo "${c.nombre}"`);
+    await this.cargar();
+  }
+
+  async eliminarCombo(c: any) {
+    this.limpiarMensajes();
+
+    if (!(await this.candyService.puedeEliminarCombo(c.id))) {
+      this.error.set(`"${c.nombre}" ya se vendió: no se puede eliminar, desactivalo.`);
+      return;
+    }
+
+    if (!confirm(`¿Eliminar el combo "${c.nombre}"?`)) {
+      return;
+    }
+
+    const ok = await this.candyService.eliminarCombo(c.id);
+
+    if (!ok) {
+      this.error.set('No se pudo eliminar el combo.');
+      return;
+    }
+
+    await this.actividad.registrar(`Eliminó el combo "${c.nombre}"`);
+    await this.cargar();
+  }
+
 
   private limpiarMensajes() {
     this.mensaje.set('');

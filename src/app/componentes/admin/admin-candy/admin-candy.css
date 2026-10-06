@@ -166,3 +166,26 @@
     border-color: #ff6b6b;
     color: #ff6b6b;
 }
+
+/* Combos */
+.vacio {
+  color: var(--color-texto-secundario);
+  font-size: 14px;
+}
+
+.tabla tr.inactivo td {
+  opacity: 0.5;
+}
+
+.estado {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background-color: #3a3745;
+  color: var(--color-texto-secundario);
+}
+
+.estado.activo {
+  background-color: rgba(76, 175, 125, 0.2);
+  color: #4caf7d;
+}

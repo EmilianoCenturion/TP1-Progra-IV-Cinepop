@@ -1,0 +1,56 @@
+<p *ngIf="cargando()">Cargando...</p>
+
+<div class="form-combo" *ngIf="!cargando()">
+    <h3>{{ editando() ? 'Editar "' + editando().nombre + '"' : 'Nuevo combo' }}</h3>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <form class="campos" [formGroup]="form" (ngSubmit)="guardar()" id="formCombo">
+        <label>Nombre
+            <input type="text" formControlName="nombre" placeholder="Ej: Combo pareja">
+        </label>
+
+                <label>URL de la imagen
+            <input type="text" formControlName="imagen_ruta" placeholder="https://...">
+        </label>
+
+        <img class="vista-previa" *ngIf="form.value.imagen_ruta" [src]="form.value.imagen_ruta" alt="Vista previa">
+
+        <div class="fila">
+            <label>Entradas incluidas
+                <input type="number" formControlName="cantidad_entradas" min="1">
+            </label>
+
+            <label>Precio del combo
+                <input type="number" formControlName="precio" min="1">
+            </label>
+        </div>
+    </form>
+
+    <h4>Productos del combo</h4>
+
+    <p class="vacio" *ngIf="items().length === 0">Todavía no agregaste productos.</p>
+
+    <ul class="lista-items" *ngIf="items().length > 0">
+        <li *ngFor="let item of items()">
+            <span>{{ item.cantidad }} × {{ item.nombre }}</span>
+            <button type="button" class="quitar" (click)="quitarItem(item.producto_id)" aria-label="Quitar producto">×</button>
+        </li>
+    </ul>
+
+    <form class="agregar-item" [formGroup]="formItem" (ngSubmit)="agregarItem()">
+        <select formControlName="producto_id" aria-label="Producto">
+            <option [ngValue]="null" disabled>Elegí un producto</option>
+            <option *ngFor="let p of productos()" [ngValue]="p.id">{{ p.nombre }} (${{ p.precio }})</option>
+        </select>
+        <input type="number" formControlName="cantidad" min="1" aria-label="Cantidad">
+        <button type="submit" class="btn-secundario">Agregar</button>
+    </form>
+
+    <div class="acciones">
+        <button type="button" class="btn-secundario" (click)="cancelar()">Cancelar</button>
+        <button type="submit" form="formCombo" class="btn-principal" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+    </div>
+</div>
