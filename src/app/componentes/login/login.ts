@@ -36,7 +36,10 @@ export class Login {
 
   formAnon: FormGroup;
 
-  ingresarAnon() {
+  async ingresarAnon() {
+    // Si había alguien logueado, se cierra su sesión: el anónimo no debe comprar con esa cuenta
+    await this.auth.signOut();
+
     localStorage.setItem('nombreAnon', this.formAnon.value.nombreAnon!);
     localStorage.setItem('emailAnon', this.formAnon.value.emailAnon!);
     this.router.navigate(['/home']);
