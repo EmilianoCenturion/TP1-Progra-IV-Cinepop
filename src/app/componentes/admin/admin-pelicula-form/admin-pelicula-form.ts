@@ -167,15 +167,18 @@ export class AdminPeliculaForm implements OnInit, ConCambiosSinGuardar {
     });
   }
 
+  // Un solo registro por edición; si cambió algún precio, se detalla en el mismo mensaje
   private async registrarEdicion(anterior: any, datos: any) {
+    let mensaje = `Editó la película "${datos.nombre}"`;
+
     if (anterior.precio_normal !== datos.precio_normal) {
-      await this.actividad.registrar(`Cambió el precio normal de "${datos.nombre}" de $${anterior.precio_normal} a $${datos.precio_normal}`);
+      mensaje += `. Precio normal: de $${anterior.precio_normal} a $${datos.precio_normal}`;
     }
 
     if (anterior.precio_preventa !== datos.precio_preventa) {
-      await this.actividad.registrar(`Cambió el precio de preventa de "${datos.nombre}" de $${anterior.precio_preventa} a $${datos.precio_preventa}`);
+      mensaje += `. Precio de preventa: de $${anterior.precio_preventa} a $${datos.precio_preventa}`;
     }
 
-    await this.actividad.registrar(`Editó la película "${datos.nombre}"`);
+    await this.actividad.registrar(mensaje);
   }
 }

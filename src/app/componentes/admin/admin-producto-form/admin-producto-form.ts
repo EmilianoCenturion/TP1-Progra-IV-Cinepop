@@ -107,10 +107,13 @@ export class AdminProductoForm implements OnInit, ConCambiosSinGuardar {
     }
 
     if (anterior) {
+      let mensaje = `Editó el producto de candy "${datos.nombre}"`;
+
       if (anterior.precio !== datos.precio) {
-        await this.actividad.registrar(`Cambió el precio de "${datos.nombre}" de $${anterior.precio} a $${datos.precio}`);
+        mensaje += `. Precio: de $${anterior.precio} a $${datos.precio}`;
       }
-      await this.actividad.registrar(`Editó el producto de candy "${datos.nombre}"`);
+
+      await this.actividad.registrar(mensaje);
     } else {
       await this.actividad.registrar(`Creó el producto de candy "${datos.nombre}"`);
     }
