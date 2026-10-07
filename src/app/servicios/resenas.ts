@@ -63,12 +63,13 @@ export class Resenas {
         return true;
     }
 
-    // Las reseñas de un usuario, para mostrar su calificación en "Mis películas"
+    // Las reseñas de un usuario, de la más nueva a la más vieja ("Mis reseñas" y la calificación en "Mis películas")
     async getResenasDeUsuario(usuarioId: string) {
         const { data, error } = await this.cliente.client()
         .from('resenas')
-        .select('pelicula_id, calificacion')
+        .select('id, pelicula_id, calificacion, comentario, creado_en, peliculas(nombre, imagen_url)')
         .eq('usuario_id', usuarioId)
+        .order('creado_en', { ascending: false })
 
         if (error != null) {
             console.log(error);
