@@ -20,7 +20,7 @@ export class Login {
 
   mostrarFormAnon = signal(false);
   
-  mensajeError: string = ""
+  mensajeError = signal("");
   
   nombreAnon = "";
   emailAnon = "";  
@@ -45,13 +45,22 @@ export class Login {
     this.router.navigate(['/home']);
   }
 
-  async resultadoLogin() {
-    let resultado = await this.auth.signIn(this.formLogin.value.email!, this.formLogin.value.contraseña!)
-    if (resultado != null) {
-      this.mensajeError = resultado;
-    } else {
-      this.router.navigate(["/home"])
-    }
+    async resultadoLogin() {
+      this.mensajeError.set("");
+
+      let resultado = await this.auth.signIn(this.formLogin.value.email!, this.formLogin.value.contraseña!)
+
+      if (resultado == null) {
+        this.router.navigate(["/home"])
+        return;
+      }
+
+      // Supabase devuelve el error en inglés: se traduce el más común
+      if (resultado === 'Invalid login credentials') {
+        this.mensajeError.set('Email o contraseña incorrectos.');
+      } else {
+        this.mensajeError.set(resultado);
+      }
   }
 
   activarFormAnon() {
