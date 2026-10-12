@@ -1,0 +1,61 @@
+<section class="admin-recompensas">
+    <h3>Recompensas de puntos</h3>
+
+    <form class="form-recompensa" [formGroup]="form" (ngSubmit)="crear()">
+        <select formControlName="tipo" aria-label="Tipo de recompensa">
+            <option value="Entrada">Entrada gratis</option>
+            <option value="Producto">Producto del candy</option>
+        </select>
+
+        <select *ngIf="form.value.tipo === 'Producto'" formControlName="productoId" aria-label="Producto">
+            <option [ngValue]="null" disabled>Elegí un producto</option>
+            <option *ngFor="let p of productos()" [ngValue]="p.id">{{ p.nombre }} (${{ p.precio }})</option>
+        </select>
+
+        <label class="costo">
+            <input type="number" formControlName="costo" min="1" aria-label="Costo en puntos">
+            <span>pts</span>
+        </label>
+
+        <button type="submit" class="btn-principal">+ Agregar recompensa</button>
+    </form>
+    <p class="ayuda">
+        Los clientes registrados suman 1 punto por cada peso que pagan y los canjean en el checkout.
+        Si cancelan una compra, se les descuentan los puntos que ganaron con ella.
+    </p>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <p class="ayuda" *ngIf="recompensas().length === 0">Todavía no hay recompensas: los clientes acumulan puntos pero no los pueden canjear.</p>
+
+    <table class="tabla" *ngIf="recompensas().length > 0">
+        <thead>
+            <tr>
+                <th>Recompensa</th>
+                <th>Costo</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let r of recompensas()" [class.inactivo]="!r.activa">
+                <td>{{ nombre(r) }}</td>
+                <td>
+                    <div class="editar-costo">
+                        <input #costo type="number" min="1" [value]="r.costo_puntos" aria-label="Costo en puntos">
+                        <span>pts</span>
+                        <button type="button" (click)="guardarCosto(r, costo.value)">Guardar</button>
+                    </div>
+                </td>
+                <td>
+                    <span class="estado" [class.activo]="r.activa">{{ r.activa ? 'Activa' : 'Inactiva' }}</span>
+                </td>
+                <td class="acciones-fila">
+                    <button type="button" (click)="cambiarEstado(r)">{{ r.activa ? 'Desactivar' : 'Activar' }}</button>
+                    <button type="button" class="btn-eliminar" (click)="eliminar(r)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

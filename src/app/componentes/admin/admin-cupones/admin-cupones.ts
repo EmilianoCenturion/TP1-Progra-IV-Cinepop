@@ -4,9 +4,10 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Cupones } from '../../../servicios/cupones';
 import { Actividad } from '../../../servicios/actividad';
 import { ConCambiosSinGuardar } from '../../../guards/cambios-sin-guardar-guard';
+import { AdminRecompensas } from '../admin-recompensas/admin-recompensas';
 
 @Component({
-  imports: [NgFor, NgIf, ReactiveFormsModule],
+  imports: [NgFor, NgIf, ReactiveFormsModule, AdminRecompensas],
   selector: 'app-admin-cupones',
   styleUrl: './admin-cupones.css',
   templateUrl: './admin-cupones.html',
