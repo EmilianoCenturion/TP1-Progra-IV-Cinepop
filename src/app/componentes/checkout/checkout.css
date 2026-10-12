@@ -223,3 +223,16 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Código único de la compra */
+.codigo-compra {
+  margin: 0;
+  padding: 14px;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-fondo);
+  font-family: monospace;
+  font-size: 28px;
+  letter-spacing: 4px;
+  text-align: center;
+  color: var(--color-acento-dorado);
+}
