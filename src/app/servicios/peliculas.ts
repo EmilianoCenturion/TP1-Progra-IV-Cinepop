@@ -1,6 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { Auth } from './auth';
-import { AuthWeakPasswordError } from '@supabase/supabase-js';
+import { aTextoLocal } from '../utils/fechas';
 
 @Service()
 export class Peliculas {
@@ -26,6 +26,7 @@ export class Peliculas {
         .from('peliculas')
         .select('*, peliculas_generos(genero_id, generos(nombre)), resenas(calificacion)')
         .eq('activa', true)
+        .lte('fecha_estreno', aTextoLocal( new Date() ))
 
         if (error != null) {
             console.log(error);
@@ -42,6 +43,36 @@ export class Peliculas {
         });
 
         return peliculasConPromedio;
+    }
+
+    // Películas que se estrenan más adelante, de la más cercana a la más lejana
+    // funciones(fecha_hora) sirve para saber si ya tienen entradas a la venta
+    async getProximamente() {
+        const ahora = aTextoLocal(new Date());
+
+        const { data, error } = await this.cliente.client()
+        .from('peliculas')
+        .select('id, nombre, sinopsis, imagen_url, duracion, formato, idioma, clasificacion_edad, fecha_estreno, funciones(fecha_hora)')
+        .eq('activa', true)
+        .gt('fecha_estreno', ahora)
+        .order('fecha_estreno', { ascending: true })
+
+        if (error != null) {
+            console.log(error);
+            return [];
+        }
+
+        for (let p of data as any[]) {
+            p.enVenta = false;
+
+            for (let f of p.funciones) {
+                if (f.fecha_hora >= ahora) {
+                    p.enVenta = true;
+                }
+            }
+        }
+
+        return data;
     }
 
     async getPelicula(id: number) {

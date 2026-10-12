@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Peliculas } from '../../servicios/peliculas';
 import { Resenas } from '../../servicios/resenas';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { signal } from '@angular/core';
 import { Router} from '@angular/router';
@@ -9,8 +9,9 @@ import { CardPelicula } from '../card-pelicula/card-pelicula';
 import { Candys } from '../../servicios/candys';
 import { Reserva } from '../../servicios/reserva';
 
+
 @Component({
-  imports: [NgFor, NgIf, FormsModule, CardPelicula],
+  imports: [NgFor, NgIf, FormsModule, CardPelicula, DatePipe],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',
@@ -21,6 +22,9 @@ export class Home implements OnInit {
   resenasService = inject(Resenas);
   candyService = inject(Candys);
   reserva = inject(Reserva);
+  
+  // Películas que se estrenan más adelante
+  proximamente = signal<any[]>([]);
 
   combos = signal<any[]>([]);
 
@@ -45,6 +49,7 @@ export class Home implements OnInit {
     this.top3.set(await this.peliculasService.tresPeliculasMasVendidas());
     this.resenas.set(await this.resenasService.getResenas());
     this.combos.set(await this.candyService.getCombosActivos());
+    this.proximamente.set(await this.peliculasService.getProximamente());
   }
 
   // Empieza una compra con combo: se guarda en Reserva y se va a elegir la película
@@ -63,6 +68,14 @@ export class Home implements OnInit {
     }
 
     return partes.join(', ');
+  }
+
+  // Días que faltan para el estreno (fecha_estreno está en hora local)
+  diasParaEstreno(fecha: string) {
+    const hoy = new Date();
+    const inicioDeHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+    return Math.ceil((new Date(fecha).getTime() - inicioDeHoy.getTime()) / (24 * 3600000));
   }
 
   verPelicula(id: number) {

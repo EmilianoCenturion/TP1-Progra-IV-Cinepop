@@ -46,4 +46,37 @@
             </li>
         </ul>
     </section>
+
+    <section *ngIf="proximamente().length > 0">
+        <h2>Próximamente</h2>
+
+        <ul class="lista-proximamente">
+            <li class="proxima" *ngFor="let p of proximamente()">
+                <img class="proxima-poster" [src]="p.imagen_url" [alt]="p.nombre">
+
+                <div class="proxima-cuerpo">
+                    <div class="proxima-fecha">
+                        <span class="dia">{{ p.fecha_estreno | date:'dd' }}</span>
+                        <span class="mes">{{ p.fecha_estreno | date:'MMMM yyyy' }}</span>
+                        <span class="faltan">Faltan {{ diasParaEstreno(p.fecha_estreno) }} días</span>
+                    </div>
+
+                    <h3>{{ p.nombre }}</h3>
+
+                    <div class="proxima-datos">
+                        <span>{{ p.formato }}</span>
+                        <span>{{ p.idioma }}</span>
+                        <span>{{ p.duracion }} min</span>
+                        <span class="edad" *ngIf="p.clasificacion_edad > 0">+{{ p.clasificacion_edad }}</span>
+                        <span *ngIf="p.clasificacion_edad === 0">ATP</span>
+                    </div>
+
+                    <p class="proxima-sinopsis">{{ p.sinopsis }}</p>
+
+                    <button type="button" class="btn-proxima" *ngIf="p.enVenta" (click)="verPelicula(p.id)">Preventa abierta · Ver funciones</button>
+                    <p class="sin-venta" *ngIf="!p.enVenta">Las entradas todavía no están a la venta</p>
+                </div>
+            </li>
+        </ul>
+    </section>
 </div>
