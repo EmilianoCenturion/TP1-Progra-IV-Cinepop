@@ -41,6 +41,14 @@ export const routes: Routes = [
                 path: 'funcion/:id/checkout', loadComponent: () => import("./componentes/checkout/checkout").then((c) => c.Checkout)
             },
             {
+                path: 'mi-cuenta', loadComponent: () => import("./componentes/mi-cuenta/mi-cuenta").then((c) => c.MiCuenta)
+            },
+            {
+                path: 'validar',
+                canActivate: [rolGuard('Empleado')],
+                loadComponent: () => import("./componentes/validar-qr/validar-qr").then((c) => c.ValidarQr)
+            },
+            {
                 path: 'admin',
                 canActivate: [rolGuard('Admin')],
                 loadComponent: () => import("./componentes/admin/panel-admin/panel-admin").then((c) => c.PanelAdmin),
@@ -113,5 +121,10 @@ export const routes: Routes = [
                 ]
             }
         ]
+    },
+    {
+        // Cualquier ruta que no existe vuelve al inicio (si no hay sesión, el guard manda al login)
+        path: "**",
+        redirectTo: "/home"
     }
 ]

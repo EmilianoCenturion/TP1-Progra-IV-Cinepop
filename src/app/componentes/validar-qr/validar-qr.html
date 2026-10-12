@@ -1,0 +1,31 @@
+<div class="validar-qr">
+    <h2>Validar QR</h2>
+    <p class="ayuda">Escribí el código de 8 caracteres que figura debajo del QR. Con el mismo código entran todas las entradas de la compra y se retira el candy.</p>
+
+    <form class="form-codigo" (ngSubmit)="validar('ingreso')">
+        <input type="text" name="codigo" [(ngModel)]="codigo" placeholder="Ej: K7M3-9QX2" maxlength="12" aria-label="Código de la compra" autocomplete="off">
+
+        <div class="botones">
+            <button type="submit" class="btn-ingreso" [disabled]="!codigo.trim() || procesando()">Validar ingreso</button>
+            <button type="button" class="btn-candy" (click)="validar('candy')" [disabled]="!codigo.trim() || procesando()">Entregar candy</button>
+        </div>
+    </form>
+
+    <p class="procesando" *ngIf="procesando()">Validando...</p>
+
+    <div class="resultado" *ngIf="resultado() as r" [class.ok]="r.ok" [class.error]="!r.ok">
+        <span class="icono">{{ r.ok ? '✓' : '✕' }}</span>
+        <h3>{{ r.titulo }}</h3>
+        <p>{{ r.detalle }}</p>
+
+        <ul class="items" *ngIf="r.ok && r.tipo === 'candy'">
+            <li *ngFor="let item of r.compra.compra_items">{{ item.cantidad }} × {{ nombreItem(item) }}</li>
+        </ul>
+
+        <div class="datos" *ngIf="r.compra as c">
+            <span>Compra N° {{ c.id }} · {{ funcion(c).peliculas.nombre }}</span>
+            <span>{{ funcion(c).salas.nombre }} · {{ funcion(c).fecha_hora | date:'dd/MM HH:mm' }}</span>
+            <span>Butacas: {{ butacas(c) }}</span>
+        </div>
+    </div>
+</div>

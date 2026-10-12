@@ -1,0 +1,136 @@
+.validar-qr {
+  max-width: 560px;
+  margin: 32px auto;
+  padding: 24px;
+  border-radius: var(--radio-card);
+  background-color: var(--color-superficie);
+}
+
+.validar-qr h2 {
+  margin: 0;
+}
+
+.ayuda,
+.procesando {
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}
+
+.form-codigo input {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.form-codigo input:focus {
+  outline: none;
+  border-color: var(--color-acento-dorado);
+}
+
+.botones {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.botones button {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radio-elemento);
+  font-family: var(--fuente-titulo);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.botones button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ingreso {
+  border: none;
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+}
+
+.btn-candy {
+  border: 1px solid var(--color-acento-dorado);
+  background: transparent;
+  color: var(--color-acento-dorado);
+}
+
+/* Resultado */
+.resultado {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: var(--radio-elemento);
+  text-align: center;
+}
+
+.resultado.ok {
+  background-color: rgba(76, 175, 125, 0.12);
+  border: 1px solid #4caf7d;
+}
+
+.resultado.error {
+  background-color: rgba(255, 107, 107, 0.12);
+  border: 1px solid #ff6b6b;
+}
+
+.resultado .icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 30px;
+  color: var(--color-fondo);
+}
+
+.resultado.ok .icono {
+  background-color: #4caf7d;
+}
+
+.resultado.error .icono {
+  background-color: #ff6b6b;
+}
+
+.resultado h3 {
+  margin: 12px 0 4px;
+  font-size: 24px;
+}
+
+.resultado.ok h3 {
+  color: #4caf7d;
+}
+
+.resultado.error h3 {
+  color: #ff6b6b;
+}
+
+.resultado p {
+  margin: 0;
+}
+
+.items {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  font-size: 18px;
+  font-family: var(--fuente-titulo);
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}

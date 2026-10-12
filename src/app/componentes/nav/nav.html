@@ -8,7 +8,9 @@
         <div class="nav-links">
             <a routerLink="/home" routerLinkActive="activo">Inicio</a>
             <a routerLink="/cartelera" routerLinkActive="activo">Cartelera</a>
+            <a *ngIf="esCliente()" routerLink="/mi-cuenta" routerLinkActive="activo">Mi cuenta</a>
             <a *appRolAdmin="'Admin'" routerLink="/admin" routerLinkActive="activo">Panel de admin</a>
+            <a *appRolAdmin="'Empleado'" routerLink="/validar" routerLinkActive="activo">Validar QR</a>
             <button type="button" class="btn-salir" (click)="cerrarSesion()">Cerrar sesion</button>
         </div>
 
