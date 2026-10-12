@@ -1,0 +1,101 @@
+<div class="mi-cuenta">
+    <h2>Mi cuenta</h2>
+
+    <p *ngIf="cargando()">Cargando...</p>
+
+    <p class="vacio" *ngIf="!cargando() && !perfil()">
+        Esta sección es para clientes registrados. <a routerLink="/registro">Registrate</a> para ver tus compras y tu crédito.
+    </p>
+
+    <ng-container *ngIf="!cargando() && perfil() as p">
+        <div class="resumen">
+            <div class="dato">
+                <span class="valor">{{ p.nombre }} {{ p.apellido }}</span>
+                <span class="etiqueta">Cliente</span>
+            </div>
+            <div class="dato">
+                <span class="valor dorado">${{ p.credito_disponible }}</span>
+                <span class="etiqueta">Crédito disponible · se usa en el checkout</span>
+            </div>
+            <div class="dato">
+                <span class="valor dorado">{{ saldoPuntos() }} pts</span>
+                <span class="etiqueta">Puntos · 1 por cada peso, se canjean en el checkout</span>
+            </div>
+        </div>
+
+        <h3>Mis películas</h3>
+
+        <p class="vacio" *ngIf="misPeliculas().length === 0">Acá vas a ver las películas que ya viste en Cinepop.</p>
+
+        <div class="grilla-peliculas" *ngIf="misPeliculas().length > 0">
+            <a class="pelicula-vista" *ngFor="let p of misPeliculas()" [routerLink]="['/pelicula', p.id]">
+                <img [src]="p.imagen_url" [alt]="p.nombre">
+                <strong>{{ p.nombre }}</strong>
+                <span class="secundario">Vista el {{ p.fecha | date:'dd/MM/yyyy' }}</span>
+
+                <span class="estrellas" *ngIf="p.calificacion > 0" [attr.aria-label]="p.calificacion + ' estrellas'">
+                    <span *ngFor="let n of estrellas" [class.llena]="n <= p.calificacion">★</span>
+                </span>
+                <span class="calificar" *ngIf="p.calificacion === 0">Calificar →</span>
+            </a>
+        </div>
+
+        <h3>Mis puntos</h3>
+
+        <p class="vacio" *ngIf="movimientos().length === 0">Todavía no tenés movimientos de puntos.</p>
+
+        <ul class="lista-puntos" *ngIf="movimientos().length > 0">
+            <li *ngFor="let m of movimientos()">
+                <span class="secundario">{{ fechaMovimiento(m) | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span class="descripcion">{{ m.descripcion }}</span>
+                <span class="puntos" [class.negativo]="m.puntos < 0">{{ m.puntos > 0 ? '+' : '' }}{{ m.puntos }}</span>
+            </li>
+        </ul>
+
+        <h3>Mis compras</h3>
+
+        <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+        <p class="error" *ngIf="error()">{{ error() }}</p>
+
+        <p class="vacio" *ngIf="compras().length === 0">Todavía no hiciste ninguna compra.</p>
+
+        <ul class="lista-compras">
+            <li class="compra" *ngFor="let c of compras()" [class.cancelada]="c.cancelada">
+                <img *ngIf="funcionDe(c) as f" [src]="f.peliculas.imagen_url" [alt]="f.peliculas.nombre">
+
+                <div class="compra-datos">
+                    <div class="compra-titulo">
+                        <strong>{{ funcionDe(c)?.peliculas.nombre }}</strong>
+                        <span [class]="'estado ' + estado(c).toLowerCase()">{{ estado(c) }}</span>
+                    </div>
+
+                    <p *ngIf="funcionDe(c) as f">{{ f.fecha_hora | date:'dd/MM/yyyy HH:mm' }} · {{ f.salas.nombre }}</p>
+                    <p>Butacas: {{ butacasDe(c) }}</p>
+                    <p *ngIf="c.compra_items.length > 0">
+                        Candy:
+                        <ng-container *ngFor="let item of c.compra_items; let ultimo = last">
+                            {{ item.cantidad }} {{ item.productos_candy ? item.productos_candy.nombre : item.combos.nombre }}{{ ultimo ? '' : ', ' }}
+                        </ng-container>
+                    </p>
+                    <p class="secundario">
+                        Compra N° {{ c.id }} · Código {{ c.codigo }} · {{ fechaCompra(c) | date:'dd/MM/yyyy HH:mm' }} · {{ c.metodo_pago }}
+                        <ng-container *ngIf="c.credito_usado > 0"> (${{ c.credito_usado }} de crédito)</ng-container>
+                    </p>
+                </div>
+
+                <div class="compra-acciones">
+                    <span class="total">${{ c.total_pagado }}</span>
+
+                    <button type="button" class="btn-cancelar" *ngIf="puedeCancelar(c)"
+                        [disabled]="cancelandoId() === c.id" (click)="cancelar(c)">
+                        {{ cancelandoId() === c.id ? 'Cancelando...' : 'Cancelar compra' }}
+                    </button>
+
+                    <small *ngIf="!c.cancelada && !puedeCancelar(c) && estado(c) === 'Activa'">
+                        Ya no se puede cancelar (menos de 2 h para la función o entrada usada)
+                    </small>
+                </div>
+            </li>
+        </ul>
+    </ng-container>
+</div>

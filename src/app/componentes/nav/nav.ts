@@ -19,9 +19,16 @@ export class Nav implements OnInit{
 
   usuarioLogueado = signal(false);
 
+  // Solo los clientes registrados tienen perfil en "usuarios" (y por lo tanto "Mi cuenta")
+  esCliente = signal(false);
+
   async ngOnInit() {
     const usuario = await this.auth.getUser();
     const emailAnon = localStorage.getItem('emailAnon');
+
+    if (usuario) {
+      this.esCliente.set((await this.auth.getPerfil()) != null);
+    }
 
     if (usuario || emailAnon) {
       this.usuarioLogueado.set(true);

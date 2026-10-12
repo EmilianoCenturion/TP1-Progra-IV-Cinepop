@@ -1,0 +1,251 @@
+.mi-cuenta {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.vacio,
+.secundario {
+  color: var(--color-texto-secundario);
+}
+
+.ok {
+  color: #4caf7d;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+/* Datos y crédito */
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  border-radius: var(--radio-card);
+  background-color: var(--color-superficie);
+}
+
+.dato .valor {
+  font-family: var(--fuente-titulo);
+  font-size: 24px;
+}
+
+.dato .valor.dorado {
+  font-size: 28px;
+  color: var(--color-acento-dorado);
+}
+
+.dato .etiqueta {
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+/* Mis películas */
+.grilla-peliculas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.pelicula-vista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-texto);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.pelicula-vista img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--radio-elemento);
+  margin-bottom: 4px;
+  transition: transform 0.2s ease;
+}
+
+.pelicula-vista:hover img {
+  transform: scale(1.03);
+}
+
+.pelicula-vista .secundario {
+  font-size: 12px;
+}
+
+.estrellas span {
+  color: var(--color-texto-secundario);
+}
+
+.estrellas span.llena {
+  color: var(--color-acento-dorado);
+}
+
+.calificar {
+  font-size: 13px;
+  color: var(--color-acento-dorado);
+}
+
+/* Puntos */
+.lista-puntos {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  max-height: 260px;
+  overflow-y: auto;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-superficie);
+}
+
+.lista-puntos li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lista-puntos .secundario {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.lista-puntos .descripcion {
+  flex: 1;
+}
+
+.lista-puntos .puntos {
+  font-family: var(--fuente-titulo);
+  color: #4caf7d;
+}
+
+.lista-puntos .puntos.negativo {
+  color: #ff6b6b;
+}
+
+/* Compras */
+.lista-compras {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.compra {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-superficie);
+}
+
+.compra.cancelada {
+  opacity: 0.6;
+}
+
+.compra img {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radio-elemento);
+}
+
+.compra-datos {
+  flex: 1;
+  font-size: 14px;
+}
+
+.compra-datos p {
+  margin: 4px 0;
+}
+
+.compra-datos .secundario {
+  font-size: 13px;
+}
+
+.compra-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--fuente-titulo);
+  font-size: 18px;
+}
+
+.estado {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 12px;
+  border: 1px solid var(--color-texto-secundario);
+  color: var(--color-texto-secundario);
+}
+
+.estado.activa {
+  border-color: #4caf7d;
+  color: #4caf7d;
+}
+
+.estado.cancelada {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.compra-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: right;
+}
+
+.compra-acciones .total {
+  font-family: var(--fuente-titulo);
+  font-size: 20px;
+  color: var(--color-acento-rojo);
+}
+
+.compra-acciones small {
+  max-width: 160px;
+  font-size: 12px;
+  color: var(--color-texto-secundario);
+}
+
+.btn-cancelar {
+  padding: 8px 14px;
+  border: 1px solid var(--color-acento-rojo);
+  border-radius: var(--radio-elemento);
+  background: transparent;
+  color: var(--color-acento-rojo);
+  cursor: pointer;
+}
+
+.btn-cancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .compra {
+    flex-wrap: wrap;
+  }
+
+  .compra-acciones {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+}

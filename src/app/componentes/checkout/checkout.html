@@ -40,7 +40,7 @@
     </ul>
   </section>
 
-  <section class="bloque">
+  <section class="bloque" *ngIf="aPagar() > 0">
     <label for="metodoPago">Método de pago</label>
     <select id="metodoPago" [(ngModel)]="metodoPago">
       <option value="Tarjeta">Tarjeta</option>
@@ -69,6 +69,36 @@
     <p class="error" *ngIf="errorCupon()">{{ errorCupon() }}</p>
   </section>
 
+  <section class="bloque" *ngIf="hayCanjes()">
+    <h3>Canjear puntos <small>(te quedan {{ puntosRestantes() }})</small></h3>
+
+    <div class="canje-fila" *ngIf="puedeCanjearEntradas()">
+      <span>Entrada gratis <small>· {{ costoEntrada() }} pts c/u</small></span>
+      <div class="contador">
+        <button type="button" (click)="cambiarEntradasCanjeadas(-1)" [disabled]="entradasCanjeadas() === 0">−</button>
+        <span>{{ entradasCanjeadas() }}</span>
+        <button type="button" (click)="cambiarEntradasCanjeadas(1)" [disabled]="entradasCanjeadas() === butacas().length || costoEntrada() > puntosRestantes()">+</button>
+      </div>
+    </div>
+
+    <div class="canje-fila" *ngFor="let c of productosCanjeables()">
+      <span>{{ c.item.producto.nombre }} <small>· {{ c.recompensa.costo_puntos }} pts c/u</small></span>
+      <div class="contador">
+        <button type="button" (click)="cambiarProductoCanjeado(c.item, c.recompensa, -1)" [disabled]="cantidadCanjeada(c.item.producto.id) === 0">−</button>
+        <span>{{ cantidadCanjeada(c.item.producto.id) }}</span>
+        <button type="button" (click)="cambiarProductoCanjeado(c.item, c.recompensa, 1)" [disabled]="cantidadCanjeada(c.item.producto.id) === c.item.cantidad || c.recompensa.costo_puntos > puntosRestantes()">+</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" *ngIf="creditoDisponible() > 0">
+    <label class="usar-credito">
+      <input type="checkbox" [(ngModel)]="usarCredito">
+      Usar mi crédito (${{ creditoDisponible() }} disponibles)
+    </label>
+    <p class="nota-credito" *ngIf="usarCredito && aPagar() === 0">Tu crédito cubre toda la compra.</p>
+  </section>
+
   <p class="aviso" *ngIf="edadMinima() > 0">
     Película para mayores de {{ edadMinima() }} años. Los menores deben ir acompañados de un adulto.
   </p>
@@ -86,17 +116,27 @@
     Esta función ya comenzó. Elegí otra función.
   </p>
 
-  <ng-container *ngIf="cuponAplicado()">
+  <ng-container *ngIf="cuponAplicado() || descuentoPuntos() > 0">
     <p class="linea-total">Subtotal <span>${{ subtotal() }}</span></p>
-    <p class="linea-total">Descuento <span>-${{ descuento() }}</span></p>
+    <p class="linea-total" *ngIf="descuentoPuntos() > 0">Canje ({{ puntosUsados() }} pts) <span>-${{ descuentoPuntos() }}</span></p>
+    <p class="linea-total" *ngIf="cuponAplicado()">Descuento <span>-${{ descuento() }}</span></p>
   </ng-container>
 
-  <p class="total">Total <span>${{ total() }}</span></p>
+  <ng-container *ngIf="creditoUsado() > 0">
+    <p class="linea-total">Total <span>${{ total() }}</span></p>
+    <p class="linea-total">Crédito <span>-${{ creditoUsado() }}</span></p>
+  </ng-container>
+
+  <p class="total">{{ creditoUsado() > 0 ? 'A pagar' : 'Total' }} <span>${{ aPagar() }}</span></p>
+
+  <p class="nota-credito" *ngIf="esCliente() && total() > 0">
+    Con esta compra sumás {{ total() }} puntos.
+  </p>
 
   <p class="error" *ngIf="errorConfirmar()">No se pudo confirmar la compra. Probá de nuevo.</p>
 
-  <div class="error" *ngIf="butacaOcupada()">
-    <p>Una de las butacas que elegiste se acaba de vender. Elegí otras para seguir.</p>
+  <div *ngIf="butacaOcupada()">
+    <p class="error mensaje-ocupada">Una de las butacas que elegiste se acaba de vender. Elegí otras para seguir.</p>
     <button type="button" class="btn-volver" (click)="volverAButacas()">Elegir otras butacas</button>
   </div>
 
@@ -109,15 +149,20 @@
   <div class="pantalla-checkout">
     <h2>¡Compra confirmada!</h2>
     <p>Compra N° {{ resultado().compra.id }} · Total ${{ resultado().compra.total_pagado }}</p>
+    <p class="nota-credito" *ngIf="resultado().compra.credito_usado > 0">
+      Usaste ${{ resultado().compra.credito_usado }} de tu crédito.
+    </p>
+    <p class="nota-credito" *ngIf="esCliente() && resultado().compra.total_pagado > 0">
+      Sumaste {{ resultado().compra.total_pagado }} puntos.
+    </p>
 
     <p class="aviso" *ngIf="edadMinima() > 0">
       Película +{{ edadMinima() }}: los menores deben ir acompañados de un adulto.
     </p>
 
-    <h3>Tus códigos de entrada</h3>
-    <ul>
-      <li *ngFor="let e of resultado().entradas">{{ e.qr }}</li>
-    </ul>
+    <h3>Tu código</h3>
+    <p class="codigo-compra">{{ resultado().compra.codigo.slice(0, 4) }}-{{ resultado().compra.codigo.slice(4) }}</p>
+    <p class="nota-credito">Con este código (o el QR del PDF) entran todas tus entradas y retirás el candy.</p>
 
     <button type="button" class="btn-confirmar" (click)="descargarPdf()">
       Descargar entradas (PDF)

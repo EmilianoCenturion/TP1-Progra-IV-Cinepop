@@ -9,6 +9,7 @@ import { Auth } from '../../servicios/auth';
 import { calcularEdad } from '../../utils/edad';
 import { PdfEntradas } from '../../servicios/pdf-entradas';
 import { Cupones } from '../../servicios/cupones';
+import { Puntos } from '../../servicios/puntos';
 
 @Component({
   imports: [NgIf, NgFor, FormsModule, DatePipe],
@@ -24,6 +25,7 @@ export class Checkout {
   private auth = inject(Auth);
   private pdfService = inject(PdfEntradas);
   private cuponesService = inject(Cupones)
+  private puntosService = inject(Puntos);
 
   butacas = this.reservaService.butacasSeleccionadas;
   carritoCandy = this.reservaService.carritoCandy;
@@ -40,9 +42,19 @@ export class Checkout {
   confirmarEdad = false;
   metodoPago = 'Tarjeta';
   procesando = signal(false);
-  butacaOcupada = signal(false)
   resultado = signal<any>(null);
   errorConfirmar = signal(false);
+  butacaOcupada = signal(false);
+  creditoDisponible = signal(0);
+  usarCredito = true;
+
+  // Canje de puntos: cuántas entradas y cuántos productos se pagan con puntos
+  esCliente = signal(false);
+  saldoPuntos = signal(0);
+  recompensaEntrada = signal<any>(null);
+  recompensasProductos = signal<any[]>([]);
+  entradasCanjeadas = signal(0);
+  productosCanjeados = signal<any[]>([]);
 
   async ngOnInit() {
       if (this.butacas().length === 0 || this.reservaService.funcionId() === null) {
@@ -65,14 +77,33 @@ export class Checkout {
 
       if (perfil) {
         this.usuarioId = perfil.id;
+        this.esCliente.set(true);
 
         this.edadUsuario.set(calcularEdad(perfil.fecha_nacimiento));
+        this.creditoDisponible.set(perfil.credito_disponible ?? 0);
+        await this.cargarPuntos(perfil.id);
 
         // Beneficio por registrarse: se aplica solo si es su primera compra
         if ( await this.cuponesService.esPrimeraCompra(perfil.id)) {
           this.cuponAplicado.set( await this.cuponesService.getCuponPrimeraCompra())
         }
       }
+  }
+
+  private async cargarPuntos(usuarioId: string) {
+    this.saldoPuntos.set(await this.puntosService.getSaldo(usuarioId));
+
+    const productos = [];
+
+    for (let r of await this.puntosService.getRecompensas(true)) {
+      if (r.tipo === 'Entrada') {
+        this.recompensaEntrada.set(r);
+      } else {
+        productos.push(r);
+      }
+    }
+
+    this.recompensasProductos.set(productos);
   }
 
   totalButacas() {
@@ -117,6 +148,135 @@ export class Checkout {
     return items;
   }
 
+  // |----- Canje de puntos
+
+  costoEntrada() {
+    return this.recompensaEntrada()?.costo_puntos ?? 0;
+  }
+
+  // Con combo las entradas ya están en el precio del combo: no se pueden canjear
+  puedeCanjearEntradas() {
+    return this.recompensaEntrada() != null && !this.combo();
+  }
+
+  // Los productos del carrito que tienen una recompensa activa
+  productosCanjeables() {
+    const lista = [];
+
+    for (let item of this.carritoCandy()) {
+      for (let r of this.recompensasProductos()) {
+        if (r.producto_id === item.producto.id) {
+          lista.push({ item, recompensa: r });
+        }
+      }
+    }
+
+    return lista;
+  }
+
+  hayCanjes() {
+    return this.saldoPuntos() > 0 && (this.puedeCanjearEntradas() || this.productosCanjeables().length > 0);
+  }
+
+  cantidadCanjeada(productoId: number) {
+    for (let p of this.productosCanjeados()) {
+      if (p.productoId === productoId) {
+        return p.cantidad;
+      }
+    }
+
+    return 0;
+  }
+
+  puntosUsados() {
+    let puntos = this.entradasCanjeadas() * this.costoEntrada();
+
+    for (let p of this.productosCanjeados()) {
+      puntos += p.cantidad * p.costo;
+    }
+
+    return puntos;
+  }
+
+  puntosRestantes() {
+    return this.saldoPuntos() - this.puntosUsados();
+  }
+
+  cambiarEntradasCanjeadas(cambio: number) {
+    const nueva = this.entradasCanjeadas() + cambio;
+
+    if (nueva < 0 || nueva > this.butacas().length) {
+      return;
+    }
+
+    if (cambio > 0 && this.costoEntrada() > this.puntosRestantes()) {
+      return;
+    }
+
+    this.entradasCanjeadas.set(nueva);
+  }
+
+  cambiarProductoCanjeado(item: any, recompensa: any, cambio: number) {
+    const nueva = this.cantidadCanjeada(item.producto.id) + cambio;
+
+    if (nueva < 0 || nueva > item.cantidad) {
+      return;
+    }
+
+    if (cambio > 0 && recompensa.costo_puntos > this.puntosRestantes()) {
+      return;
+    }
+
+    const lista = [];
+
+    for (let p of this.productosCanjeados()) {
+      if (p.productoId !== item.producto.id) {
+        lista.push(p);
+      }
+    }
+
+    if (nueva > 0) {
+      lista.push({ productoId: item.producto.id, cantidad: nueva, costo: recompensa.costo_puntos, precio: item.producto.precio });
+    }
+
+    this.productosCanjeados.set(lista);
+  }
+
+  // Las entradas gratis son las más baratas de las elegidas
+  butacasCanjeadas() {
+    const ordenadas = [...this.butacas()];
+    ordenadas.sort((a, b) => Number(a.precio) - Number(b.precio));
+
+    return ordenadas.slice(0, this.entradasCanjeadas());
+  }
+
+  // Cuánta plata se ahorra con lo canjeado
+  descuentoPuntos() {
+    let suma = 0;
+
+    for (let b of this.butacasCanjeadas()) {
+      suma += Number(b.precio);
+    }
+
+    for (let p of this.productosCanjeados()) {
+      suma += p.cantidad * p.precio;
+    }
+
+    return suma;
+  }
+
+  // Lo que se le manda al servicio para guardar los canjes
+  private datosCanje() {
+    const butacaIds = [];
+
+    for (let b of this.butacasCanjeadas()) {
+      butacaIds.push(b.id);
+    }
+
+    return { butacaIds, costoEntrada: this.costoEntrada(), productos: this.productosCanjeados() };
+  }
+
+  // El cupón se aplica sobre lo que queda después de canjear
   descuento () {
     const cupon = this.cuponAplicado();
 
@@ -124,11 +284,43 @@ export class Checkout {
       return 0;
     }
 
-    return Math.round(this.subtotal() * cupon.porcentaje_descuento / 100);
+    return Math.round((this.subtotal() - this.descuentoPuntos()) * cupon.porcentaje_descuento / 100);
   }
 
   total() {
-    return this.subtotal() - this.descuento()
+    return this.subtotal() - this.descuentoPuntos() - this.descuento()
+  }
+
+  // El crédito cubre hasta el total; lo que sobra queda en la cuenta para otra compra
+  creditoUsado() {
+    if (!this.usarCredito) {
+      return 0;
+    }
+
+    return Math.min(this.creditoDisponible(), this.total());
+  }
+
+  // Lo que falta pagar con el método de pago elegido
+  aPagar() {
+    return this.total() - this.creditoUsado();
+  }
+
+  // El crédito se usa junto con otro método de pago, o solo si alcanza para todo
+  metodoPagoFinal() {
+    // Todo pagado con puntos
+    if (this.total() === 0) {
+      return 'Puntos';
+    }
+
+    if (this.creditoUsado() === 0) {
+      return this.metodoPago;
+    }
+
+    if (this.aPagar() === 0) {
+      return 'Crédito';
+    }
+
+    return this.metodoPago + ' + Crédito';
   }
 
   async aplicarCupon() {
@@ -179,15 +371,18 @@ export class Checkout {
 
     this.procesando.set(true);
     this.errorConfirmar.set(false);
+    this.butacaOcupada.set(false);
 
     const resultado = await this.compraService.confirmarCompra(
       this.reservaService.funcionId()!,
       this.butacas(),
       this.carritoCandy(),
-      this.metodoPago,
+      this.metodoPagoFinal(),
       this.total(),
       this.cuponAplicado()?.id ?? null,
-      this.combo()
+      this.combo(),
+      this.creditoUsado(),
+      this.datosCanje()
     );
 
     this.procesando.set(false);
