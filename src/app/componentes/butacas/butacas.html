@@ -28,6 +28,9 @@
     <aside class="panel-seleccion">
       <h3>Butacas seleccionadas</h3>
 
+      <p class="en-vivo"><span class="punto"></span> Disponibilidad en vivo</p>
+      <p class="aviso-vendida" *ngIf="avisoVendida()">{{ avisoVendida() }}</p>
+
       <ng-template #sinSeleccion>
         <p class="panel-vacio">Todavía no seleccionaste ninguna butaca.</p>
       </ng-template>

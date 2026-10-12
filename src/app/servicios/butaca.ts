@@ -1,5 +1,6 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Service} from '@angular/core';
 import { Auth } from './auth';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Service()
 export class Butaca {
@@ -58,11 +59,32 @@ export class Butaca {
         return data;
     }
 
+    // Realtime: avisa cada vez que se inserta, cambia o borra una entrada de esta función
+    // Los DELETE no se pueden filtrar por columna, por eso se escucha toda la tabla y se filtra acá
+    escucharEntradas(funcionId: number, alCambiar: () => void) {
+        return this.cliente.client()
+        .channel(`entradas-funcion-${funcionId}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'entradas' }, (payload: any) => {
+            const nueva = payload.new;
+
+            // En un DELETE "new" viene vacío: se recarga igual por las dudas (por ejemplo, una compra deshecha)
+            if (payload.eventType === 'DELETE' || nueva?.funcion_id === funcionId) {
+                alCambiar();
+            }
+        })
+        .subscribe();
+    }
+
+    dejarDeEscuchar(canal: RealtimeChannel) {
+        this.cliente.client().removeChannel(canal);
+    }
+
     async getButacasOcupadas(funcionId: number) {
         const { data, error } = await this.cliente.client()
         .from('entradas')
         .select('butaca_id')
         .eq('funcion_id', funcionId)
+        .eq('anulada', false)
 
         if (error != null) {
             console.log(error);

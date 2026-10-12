@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { JsonPipe, Location, NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, signal, OnDestroy } from '@angular/core';
+import { Location, NgFor, NgIf } from '@angular/common';
 import { Butaca } from '../../servicios/butaca';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Funciones } from '../../servicios/funciones';
 import { Reserva } from '../../servicios/reserva';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { Reserva } from '../../servicios/reserva';
   styleUrl: './butacas.css',
   templateUrl: './butacas.html',
 })
-export class Butacas implements OnInit {
+export class Butacas implements OnInit, OnDestroy {
 
   funcion = signal<any>(null);
   filasAgrupadas = signal<any[]>([]);
@@ -21,6 +22,10 @@ export class Butacas implements OnInit {
   butacaSeleccionada = signal<any[]>([]);
 
   avisoCombo = signal("");
+  
+  // Realtime: las butacas que compra otra persona se marcan como ocupadas sin recargar
+  avisoVendida = signal("");
+  private canal: RealtimeChannel | null = null;
 
   constructor(private butacaService: Butaca,
     private route: ActivatedRoute,
@@ -55,8 +60,56 @@ export class Butacas implements OnInit {
 
       this.funcion.set(resultado);
       this.filasAgrupadas.set(this.agruparPorFila(resultadoButacasSala));
-      this.idsOcupados.set(resultadoButacasOcupadas.map(r => r.butaca_id))
+      this.idsOcupados.set(resultadoButacasOcupadas.map(r => r.butaca_id));
+      this.escucharEnVivo(Number(id));
     })
+  }
+
+    ngOnDestroy() {
+    if (this.canal) {
+      this.butacaService.dejarDeEscuchar(this.canal);
+    }
+  }
+
+  private escucharEnVivo(funcionId: number) {
+    if (this.canal) {
+      this.butacaService.dejarDeEscuchar(this.canal);
+    }
+
+    this.canal = this.butacaService.escucharEntradas(funcionId, () => this.actualizarOcupadas(funcionId));
+  }
+
+  // Se vuelven a pedir las ocupadas; si alguna de las elegidas se vendió, se saca de la selección
+  private async actualizarOcupadas(funcionId: number) {
+    const ocupadas = await this.butacaService.getButacasOcupadas(funcionId);
+
+    if (!ocupadas) {
+      return;
+    }
+
+    const ids: number[] = [];
+
+    for (let o of ocupadas) {
+      ids.push(o.butaca_id);
+    }
+
+    this.idsOcupados.set(ids);
+
+    const quedan = [];
+    let vendidas = '';
+
+    for (let b of this.butacaSeleccionada()) {
+      if (ids.includes(b.id)) {
+        vendidas += (vendidas === '' ? '' : ', ') + b.fila + b.numero;
+      } else {
+        quedan.push(b);
+      }
+    }
+
+    if (vendidas !== '') {
+      this.butacaSeleccionada.set(quedan);
+      this.avisoVendida.set(`Otra persona acaba de comprar: ${vendidas}. Elegí otra butaca.`);
+    }
   }
 
   private agruparPorFila(butacas: any[]) {
@@ -121,6 +174,7 @@ export class Butacas implements OnInit {
     }
 
     this.avisoCombo.set('');
+    this.avisoVendida.set('');
     this.butacaSeleccionada.set(nuevaLista);
   }
 
