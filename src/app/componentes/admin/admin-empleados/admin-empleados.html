@@ -1,0 +1,41 @@
+<div class="admin-empleados">
+    <h3>Empleados</h3>
+    <p class="ayuda">Los empleados entran con su email y contraseña, y solo ven la pantalla <strong>Validar QR</strong> para el ingreso a la sala y el candy bar.</p>
+
+    <form class="form-empleado" [formGroup]="form" (ngSubmit)="crear()">
+        <input type="text" formControlName="nombre" placeholder="Nombre" aria-label="Nombre">
+        <input type="email" formControlName="email" placeholder="Email" aria-label="Email">
+        <input type="password" formControlName="password" placeholder="Contraseña (mín. 6)" aria-label="Contraseña" autocomplete="new-password">
+
+        <button type="submit" class="btn-principal" [disabled]="guardando()">
+            {{ guardando() ? 'Creando...' : '+ Dar de alta' }}
+        </button>
+    </form>
+
+    <p class="error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">Ingresá un email válido.</p>
+    <p class="error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">La contraseña tiene que tener al menos 6 caracteres.</p>
+
+    <p class="ok" *ngIf="mensaje()">{{ mensaje() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <p class="ayuda" *ngIf="empleados().length === 0">Todavía no hay empleados.</p>
+
+    <table class="tabla" *ngIf="empleados().length > 0">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let e of empleados()">
+                <td>{{ e.nombre || '—' }}</td>
+                <td>{{ e.email || '—' }}</td>
+                <td class="acciones-fila">
+                    <button type="button" class="btn-eliminar" (click)="darDeBaja(e)">Dar de baja</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

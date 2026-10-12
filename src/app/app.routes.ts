@@ -118,6 +118,11 @@ export const routes: Routes = [
                         canDeactivate: [cambiosSinGuardarGuard],
                         loadComponent: () => import("./componentes/admin/admin-cupones/admin-cupones").then((c) => c.AdminCupones)
                     },
+                    {
+                        path: 'empleados',
+                        canDeactivate: [cambiosSinGuardarGuard],
+                        loadComponent: () => import("./componentes/admin/admin-empleados/admin-empleados").then((c) => c.AdminEmpleados)
+                    },
                 ]
             }
         ]
