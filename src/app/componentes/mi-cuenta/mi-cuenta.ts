@@ -28,6 +28,7 @@ export class MiCuenta implements OnInit {
   cancelandoId = signal<number | null>(null);
   mensaje = signal('');
   error = signal('');
+  misResenas = signal<any[]>([]);
 
   async ngOnInit() {
     await this.cargar();
@@ -42,7 +43,10 @@ export class MiCuenta implements OnInit {
       this.compras.set(await this.compraService.getMisCompras(perfil.id));
       this.saldoPuntos.set(await this.puntosService.getSaldo(perfil.id));
       this.movimientos.set(await this.puntosService.getMovimientos(perfil.id));
-      this.armarMisPeliculas(await this.resenasService.getResenasDeUsuario(perfil.id));
+      const resenas = await this.resenasService.getResenasDeUsuario(perfil.id);
+      this.misResenas.set(resenas);
+      this.armarMisPeliculas(resenas);
+      
     }
 
     this.cargando.set(false);
@@ -104,7 +108,13 @@ export class MiCuenta implements OnInit {
     }
 
     this.misPeliculas.set(peliculas);
+  } 
+
+  // creado_en se guarda en UTC (movimientos de puntos y reseñas)
+  fechaUtc(fila: any) {
+    return new Date(fila.creado_en + 'Z');
   }
+
 
   // creado_en se guarda en UTC
   fechaMovimiento(m: any) {
