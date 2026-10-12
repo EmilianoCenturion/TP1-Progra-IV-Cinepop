@@ -209,3 +209,117 @@
 .sin-resenas {
   color: var(--color-texto-secundario);
 }
+
+/* Escribir reseña */
+.form-resena {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-superficie);
+}
+
+.form-resena-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 16px;
+}
+
+.elegir-estrellas {
+  display: flex;
+  gap: 4px;
+}
+
+.elegir-estrellas button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-texto-secundario);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.elegir-estrellas button.llena {
+  color: var(--color-acento-dorado);
+}
+
+.form-resena textarea {
+  padding: 10px 12px;
+  border-radius: var(--radio-elemento);
+  border: 1px solid var(--color-texto-secundario);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  resize: vertical;
+}
+
+.btn-resena {
+  align-self: flex-start;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-resena:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-resena {
+  margin: 0;
+  font-size: 13px;
+  color: #ff6b6b;
+}
+
+.aviso-resena {
+  color: var(--color-texto-secundario);
+}
+
+.ok-resena {
+  color: #4caf7d;
+}
+
+/* Función elegida + botón para seguir a las butacas */
+.continuar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-superficie);
+  font-family: 'Work Sans', sans-serif;
+}
+
+.continuar .elegida {
+  color: #fff;
+}
+
+.continuar .sin-seleccion {
+  color: #9d9aa8;
+}
+
+.btn-continuar {
+  flex-shrink: 0;
+  padding: 12px 22px;
+  border: none;
+  border-radius: var(--radio-elemento);
+  background-color: var(--color-acento-rojo);
+  color: var(--color-texto);
+  font-family: var(--fuente-titulo);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-continuar:hover {
+  filter: brightness(1.1);
+}

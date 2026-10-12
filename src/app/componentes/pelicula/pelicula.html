@@ -41,6 +41,20 @@
                     <span>{{ f.fecha_hora | date:'dd/MM HH:mm' }}</span>
                 </li>
             </ul>
+
+            <!-- Resumen de la función elegida y botón para seguir -->
+            <div class="continuar" *ngIf="funciones().length > 0">
+                <ng-container *ngIf="funcionSeleccionada() as funcion; else sinSeleccion">
+                    <span class="elegida">
+                        {{ funcion.salas.nombre }} · {{ funcion.fecha_hora | date:'EEEE dd/MM' }} a las {{ funcion.fecha_hora | date:'HH:mm' }}
+                    </span>
+                    <button type="button" class="btn-continuar" [routerLink]="['/funcion', funcion.id, 'butacas']">Elegir butacas →</button>
+                </ng-container>
+
+                <ng-template #sinSeleccion>
+                    <span class="sin-seleccion">Elegí una función para continuar</span>
+                </ng-template>
+            </div>
         </div>
 
         <div class="resenas">
@@ -48,7 +62,32 @@
                 Reseñas
                 <span class="promedio" *ngIf="p.promedio">★ {{ p.promedio }} de 5 ({{ p.resenas.length }})</span>
             </h3>
+            
+            <!-- Escribir reseña -->
+            <form class="form-resena" *ngIf="estadoResena() === 'puede'" [formGroup]="formResena" (ngSubmit)="enviarResena()">
+                <span class="form-resena-titulo">Tu reseña</span>
 
+                <div class="elegir-estrellas">
+                    <button type="button" *ngFor="let n of estrellas"
+                        [class.llena]="n <= formResena.value.calificacion!"
+                        (click)="elegirCalificacion(n)" [attr.aria-label]="n + ' estrellas'">★</button>
+                </div>
+                <p class="error-resena" *ngIf="formResena.get('calificacion')?.touched && formResena.get('calificacion')?.invalid">Elegí de 1 a 5 estrellas.</p>
+
+                <textarea rows="3" formControlName="comentario" placeholder="¿Qué te pareció?"></textarea>
+                <p class="error-resena" *ngIf="formResena.get('comentario')?.touched && formResena.get('comentario')?.invalid">Escribí un comentario (entre 5 y 500 caracteres).</p>
+
+                <p class="error-resena" *ngIf="errorResena()">{{ errorResena() }}</p>
+                <button type="submit" class="btn-resena" [disabled]="enviandoResena()">
+                    {{ enviandoResena() ? 'Enviando...' : 'Publicar reseña' }}
+                </button>
+            </form>
+
+            <p class="aviso-resena" *ngIf="estadoResena() === 'login'">Iniciá sesión con tu cuenta para dejar una reseña.</p>
+            <p class="aviso-resena" *ngIf="estadoResena() === 'no-vio'">Vas a poder reseñarla después de ver la película.</p>
+            <p class="aviso-resena" *ngIf="estadoResena() === 'ya-reseno' && !mensajeResena()">Ya dejaste tu reseña de esta película.</p>
+            <p class="ok-resena" *ngIf="mensajeResena()">{{ mensajeResena() }}</p>
+            
             <p class="sin-resenas" *ngIf="p.resenas.length === 0">Todavía nadie reseñó esta película.</p>
 
             <ul *ngIf="p.resenas.length > 0">
@@ -65,10 +104,4 @@
             </ul>
         </div>
     </div>
-
-    <button *ngIf="funcionSeleccionada() as funcion; else sinSeleccion "  [routerLink]="['/funcion', funcion.id, 'butacas']">Continuar</button>
-
-    <ng-template #sinSeleccion>
-        <p>Selecciona una funcion para continuar</p>
-    </ng-template>
 </div>
